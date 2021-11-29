@@ -1,0 +1,27 @@
+{
+  "name": "tacs-project",
+  "description": "",
+  "version": "1.0.0",
+  "main": "parser.ts",
+  "dependencies": {
+    "ts-node": "^10.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.10",
+    "tslib": "^2.3.1",
+    "typescript": "^4.5.2"
+  },
+  "scripts": {
+    "start": "tsc parser.ts && node parser.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nmtc01/TACS-Project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nmtc01/TACS-Project/issues"
+  },
+  "homepage": "https://github.com/nmtc01/TACS-Project#readme"
+}

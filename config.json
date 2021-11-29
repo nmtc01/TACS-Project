@@ -1,0 +1,113 @@
+{
+  "database": [
+    {
+      "name": "user",
+      "attributes": [
+        {
+          "name": "id",
+          "type": "number" 
+        },
+        {
+          "name": "name",
+          "type": "text" 
+        },
+        {
+          "name": "address",
+          "type": "text" 
+        }
+      ]
+    },
+    {
+      "name": "friendship",
+      "attributes": [
+        {
+          "name": "friend1",
+          "type": "number",
+          "references": "user.id" 
+        },
+        {
+          "name": "friend2",
+          "type": "number",
+          "references": "user.id"
+        }
+      ]
+    }
+  ],
+  "frontend": {},
+  "backend": {
+    "routes": [
+      {
+        "name": "All users", 
+        "method": "GET",
+        "path": "/users",
+        "resource": "user"
+      },
+      {
+        "name": "User details", 
+        "method": "GET",
+        "path": "/users/:id",
+        "resource": "user"
+      },
+      {
+        "name": "Add user", 
+        "method": "POST",
+        "path": "/users",
+        "resource": "user",
+        "data": [
+          {
+            "name": "name",
+            "type": "text",
+            "required": true
+          },
+          {
+            "name": "address",
+            "type": "text",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "Update user", 
+        "method": "PUT",
+        "path": "/users/:id",
+        "resource": "user",
+        "data": [
+          {
+            "name": "name",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "address",
+            "type": "text",
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "Delete user", 
+        "method": "DELETE",
+        "path": "/users/:id",
+        "resource": "user"
+      },
+      {
+        "name": "Add friendship", 
+        "method": "POST",
+        "path": "/friendships",
+        "resource": "friendship",
+        "data": [
+          {
+            "name": "friend1",
+            "type": "number",
+            "required": true
+          },
+          {
+            "name": "friend2",
+            "type": "number",
+            "required": true
+          }
+        ]
+      },
+    ]
+  }
+}
