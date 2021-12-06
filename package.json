@@ -12,7 +12,7 @@
     "typescript": "^4.5.2"
   },
   "scripts": {
-    "start": "tsc parser.ts && node parser.js"
+    "start": "ts-node parser.ts"
   },
   "repository": {
     "type": "git",
