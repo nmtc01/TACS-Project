@@ -6,7 +6,7 @@ class Attribute {
     references: any;
 
     print() {
-        console.log(`\t${this.name}: ${this.type}` + this.references? `\treferences ${references}` : '');
+        console.log(`\t${this.name}: ${this.type}` + this.references? `\treferences ${this.references}` : '');
     }
 }
 
