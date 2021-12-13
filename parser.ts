@@ -1,15 +1,17 @@
 const config = require('./config.json');
-const Database = require('./model/database/database')
+import Database from './model/database/database';
+import Table from './model/database/table';
+
 
 function main() {
-    console.log("Initializing parser...")
-    console.log(config)
+    console.log("Initializing parser...");
+    console.log(config);
 
-
-    const database = new Database()
+    let tables = new Array<Table>();
+    const database = new Database(tables);
 
     config.database.forEach((table: any) => {
-        database.addTable(table.name, table.attributes)
+        database.addTable(table.name, table.attributes);
     });
 
 }

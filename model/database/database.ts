@@ -1,22 +1,17 @@
-const Table = require('./table');
-const Attribute = require('./attribute');
+import Table from './table';
+import Attribute from './attribute';
 
-module.exports = class Database {
-    tables: Array<InstanceType<typeof Table>>;
-    
-    constructor() {
-        this.tables = new Array<InstanceType<typeof Table>>();
-        return new Database();
-    }
+export default class Database {
+    constructor(private tables: Array<Table>) {}
 
-    addTable(name: string, attributes: Array<InstanceType<typeof Attribute>>): Database {
-        this.tables.push(new Table(name).addAllAttributes(attributes));
+    addTable(name: string, attributes: Array<Attribute>): Database {
+        this.tables.push(new Table(name, attributes).addAllAttributes(attributes));
         return this;
     }
 
     print() {
-        console.log(" ===== Database =====\n")
-        this.tables.forEach((table:any) => {
+        console.log(" ===== Database =====\n");
+        this.tables.forEach((table: any) => {
             table.print();
         });
     }

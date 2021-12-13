@@ -1,19 +1,14 @@
-const Attribute = require('./attribute');
+import Attribute from './attribute';
 
-class Table {
-    name: string;
-    attributes: Array<InstanceType<typeof Attribute>>;
-
-    constructor(name: string){
-        return new Table(name);
-    }
+export default class Table {
+    constructor(private name: string, private attributes: Array<Attribute>){}
 
     addAttribute(attribute: Attribute): Table {
         this.attributes.push(attribute);
         return this;
     }
 
-    addAllAttributes(attributes: Array<InstanceType<typeof Attribute>>): Table {
+    addAllAttributes(attributes: Array<Attribute>): Table {
         this.attributes.push(...attributes);
         return this;
     }
@@ -25,5 +20,3 @@ class Table {
         });
     }
 }
-
-export default Table;
