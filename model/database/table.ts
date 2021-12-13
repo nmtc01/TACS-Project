@@ -1,7 +1,9 @@
 import Attribute from './attribute';
 
 export default class Table {
-    constructor(private name: string, private attributes: Array<Attribute>){}
+    public attributes: Array<Attribute>;
+
+    constructor(public name: string){ this.attributes = new Array<Attribute>(); }
 
     addAttribute(attribute: Attribute): Table {
         this.attributes.push(attribute);
@@ -15,7 +17,8 @@ export default class Table {
 
     print() {
         console.log(`Table ${this.name}:`)
-        this.attributes.forEach(attribute => {
+
+        this.attributes.forEach((attribute: Attribute) => {
             attribute.print()
         });
     }
