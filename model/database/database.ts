@@ -1,20 +1,20 @@
 import Table from './table';
-import type { TableJSON } from './types'
-
+import Attribute from './attribute';
 
 export default class Database {
-    public tables: Array<Table>;
+    private tables: Array<Table>;
     constructor() { this.tables = new Array<Table>(); }
 
-    addTable(input: TableJSON): Database {
-        let table: Table; 
-        try {
-            table = Table.deserialize(input);
-            this.tables.push(table);
-        } catch (error) {
-            console.log("Couldn't parse json file");
-        }
-        
+    addTable(name: string, attributes: Array<Attribute>): Database {
+        let att = new Array<Attribute>();
+       /*  attributes.forEach(jsonAttribute => {
+            if (jsonAttribute.hasOwnProperty('name') && jsonAttribute.hasOwnProperty('type') && jsonAttribute.hasOwnProperty('references')) {
+                att.push(new Attribute(, jsonAttribute.type, jsonAttribute.references))
+            } else {
+                throw new Error("Attribute on ");
+            }
+        }); */
+        this.tables.push(new Table(name).addAllAttributes(attributes));
         return this;
     }
 

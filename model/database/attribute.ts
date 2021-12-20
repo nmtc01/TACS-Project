@@ -1,13 +1,9 @@
-import type { AttributeJSON, type_ } from './types'
+type type_ = "text" | "number" | "date";
 
 export default class Attribute {
-    constructor(private name: string, private type: type_, private references?: string) {}
-    
-    static deserialize(input: AttributeJSON): Attribute {
-        return new Attribute(input.name, input.type, input.references);
-    }
+    constructor(private name: string, private type: type_, private references?: number) {}
 
     print() {
-        console.log(`\t${this.name}: ${this.type}` + (this.references? `\treferences ${this.references}` : ''));
+        console.log(`\t${this.name}: ${this.type}` + this.references? `\treferences ${this.references}` : '');
     }
 }

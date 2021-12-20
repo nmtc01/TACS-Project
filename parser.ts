@@ -1,7 +1,5 @@
-const config = require('./config/config.json');
+const config = require('./config.json');
 import Database from './model/database/database';
-import { TableJSON } from './model/database/types';
-
 
 function main() {
     console.log("Initializing parser...");
@@ -9,15 +7,10 @@ function main() {
 
     const database = new Database();
 
-    config.database.forEach((table: TableJSON) => {
-        database.addTable(table);
+    config.database.forEach(table => {
+        database.addTable(table.name, table.attributes);
     });
-    console.log("TYPEOf")
-    database.tables.forEach(element => {
-        element.attributes.forEach(att => {
-            
-        })
-    });
+
     database.print();
 
 }
