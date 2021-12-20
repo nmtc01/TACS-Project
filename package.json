@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "main": "parser.ts",
   "dependencies": {
+    "fs-extra": "^10.0.0",
     "ts-node": "^10.4.0"
   },
   "devDependencies": {
