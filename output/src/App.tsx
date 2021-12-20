@@ -1,4 +1,5 @@
 import './App.css'
+import Form from './components/Form'
 
 function App() {
 
@@ -6,8 +7,9 @@ function App() {
     <div className="App">
       <header className="App-header">
         <p style={styles.title}>
-          Empty information system!
+          Information system!
         </p>
+        <Form />
       </header>
     </div>
   );
