@@ -9,8 +9,8 @@ export default class Backend {
     constructor() { this.routes = new Array<Route>(); }
 
     addRoute(input: any): Backend {
-        let route: Route;
         try {
+            let route: Route;
             switch (input.method) {
                 case "GET":
                     route = RouteGET.deserialize(input);

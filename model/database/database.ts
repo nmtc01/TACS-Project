@@ -7,9 +7,8 @@ export default class Database {
     constructor() { this.tables = new Array<Table>(); }
 
     addTable(input: TableJSON): Database {
-        let table: Table; 
         try {
-            table = Table.deserialize(input);
+            const table = Table.deserialize(input);
             this.tables.push(table);
         } catch (error) {
             console.log("Couldn't parse json file");
