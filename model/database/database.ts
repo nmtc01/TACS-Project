@@ -19,9 +19,10 @@ export default class Database {
     }
 
     print() {
-        console.log(" ===== Database =====\n");
+        console.log("\n===== Database =====\n");
         this.tables.forEach((table: Table) => {
             table.print();
+            console.log('\n');
         });
     }
 }

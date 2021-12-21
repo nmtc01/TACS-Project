@@ -1,8 +1,10 @@
+export type type_ = "text" | "number" | "date";
+
 export type path = `/${string}`
 
-export type element = {
+export type ElementJSON = {
     name: string,
-    type: string,
+    type: type_,
     required: boolean
 }
 
@@ -18,18 +20,16 @@ export type RouteGETJSON = RouteJSON & {
 
 export type RoutePOSTJSON = RouteJSON & {
     method: "POST";
-    data: element[];
+    data: Array<ElementJSON>;
 }
 
 export type RoutePUTJSON = RouteJSON & {
     method: "PUT";
-    data: element[];
+    data: Array<ElementJSON>;
 }
 
 export type RouteDELETEJSON = RouteJSON & {
-  method: "DELETE";
+    method: "DELETE";
 }
 
-export type RoutesJSON = {
-  routes: Array<RouteGETJSON | RoutePOSTJSON | RoutePUTJSON | RouteDELETEJSON>;
-}
+export type RoutesJSON = Array<RouteGETJSON | RoutePOSTJSON | RoutePUTJSON | RouteDELETEJSON>;
