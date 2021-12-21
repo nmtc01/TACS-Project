@@ -32,4 +32,6 @@ export type RouteDELETEJSON = RouteJSON & {
     method: "DELETE";
 }
 
-export type RoutesJSON = Array<RouteGETJSON | RoutePOSTJSON | RoutePUTJSON | RouteDELETEJSON>;
+export type RouteTypeJSON = RouteGETJSON | RoutePOSTJSON | RoutePUTJSON | RouteDELETEJSON;
+
+export type RoutesJSON = Array<RouteTypeJSON>;

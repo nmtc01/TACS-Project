@@ -3,7 +3,7 @@ const config = require('./config/config.json');
 import Database from './model/database/database';
 import { TableJSON } from './model/database/types';
 import Backend from './model/backend/backend';
-import { RoutesJSON, RouteJSON } from './model/backend/types';
+import { RoutesJSON, RouteTypeJSON } from './model/backend/types';
 
 
 function main() {
@@ -31,7 +31,7 @@ function main() {
         return;
     }
     const routes: RoutesJSON = config.backend.routes;
-    routes.forEach((route: RouteJSON) => {
+    routes.forEach((route: RouteTypeJSON) => {
         backend.addRoute(route);
     });
 

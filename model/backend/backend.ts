@@ -3,12 +3,13 @@ import RouteGET from './routeGET';
 import RoutePOST from './routePOST';
 import RoutePUT from './routePUT';
 import RouteDELETE from './routeDELETE';
+import { RouteTypeJSON } from './types';
 
 export default class Backend {
     private routes: Array<Route>;
     constructor() { this.routes = new Array<Route>(); }
 
-    addRoute(input: any): Backend {
+    addRoute(input: RouteTypeJSON): Backend {
         try {
             let route: Route;
             switch (input.method) {
