@@ -1,21 +1,49 @@
-import { Route } from './route'
-import type { RouteJSON } from './types'
+import Route from './route'
+import RouteGET from './routeGET';
+import RoutePOST from './routePOST';
+import RoutePUT from './routePUT';
+import RouteDELETE from './routeDELETE';
+import { RouteTypeJSON } from './types';
 
 export default class Backend {
-    public routes: Array<Route>;
-
+    private routes: Array<Route>;
     constructor() { this.routes = new Array<Route>(); }
 
-    addRoute(input: RouteJSON): Backend {
-        let route: Route; 
+    addRoute(input: RouteTypeJSON): Backend {
         try {
-            //table = Route.deserialize(input); TODO
+            let route: Route;
+            switch (input.method) {
+                case "GET":
+                    route = RouteGET.deserialize(input);
+                    break;
+                case "POST":
+                    route = RoutePOST.deserialize(input);
+                    break;
+                case "PUT":
+                    route = RoutePUT.deserialize(input);
+                    break;
+                case "DELETE":
+                    route = RouteDELETE.deserialize(input);
+                    break;
+                default:
+                    throw new Error("Invalid Method");
+            }
             this.routes.push(route);
-        } catch (error) {
+        }
+        catch (error) {
+            console.log(error);
             console.log("Couldn't parse json file");
         }
         
         return this;
+    }
+
+    print() {
+        console.log("\n===== Backend =====\n");
+        this.routes.forEach((route: Route) => {
+            route.print();
+            console.log('\n');
+        });
     }
 }
 

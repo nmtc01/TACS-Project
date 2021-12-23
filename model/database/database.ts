@@ -7,9 +7,8 @@ export default class Database {
     constructor() { this.tables = new Array<Table>(); }
 
     addTable(input: TableJSON): Database {
-        let table: Table; 
         try {
-            table = Table.deserialize(input);
+            const table = Table.deserialize(input);
             this.tables.push(table);
         } catch (error) {
             console.log("Couldn't parse json file");
@@ -19,9 +18,10 @@ export default class Database {
     }
 
     print() {
-        console.log(" ===== Database =====\n");
+        console.log("\n===== Database =====\n");
         this.tables.forEach((table: Table) => {
             table.print();
+            console.log('\n');
         });
     }
 }

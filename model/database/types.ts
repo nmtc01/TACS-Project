@@ -2,7 +2,7 @@ export type type_ = "text" | "number" | "date";
 
 export type TableJSON = {
   name: string;
-  attributes: AttributeJSON[];
+  attributes: Array<AttributeJSON>;
 }
 export type AttributeJSON = {
   name: string;
