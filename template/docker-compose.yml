@@ -1,0 +1,36 @@
+version: "3"
+services: 
+  client:
+    build:
+      context: ./client 
+    ports:
+      - ${CLIENT_PORT}:3000
+    volumes:
+      - ./client:/usr/client
+      - ./client/node_modules:/usr/client/node_modules
+    depends_on:
+      - server
+  server:
+    env_file:
+      - .env
+    build:
+      context: ./server
+    ports:
+      - ${SERVER_PORT}:${SERVER_PORT}
+    volumes:
+      - ./server:/usr/server
+      - ./server/node_modules:/usr/server/node_modules
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME="${DB_USER}"
+      - MONGO_INITDB_ROOT_PASSWORD="${DB_PASS}"
+      - MONGO_INITDB_DATABASE="${DB_NAME}"
+  mongo:
+    image: mongo
+    ports: 
+      - 27017:27017
+    environment: 
+      MONGO_INITDB_DATABASE: ${DB_NAME}
+    volumes:
+      - ./database/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
