@@ -1,0 +1,44 @@
+const fse = require('fs-extra');
+import Database from './model/database/database';
+import Backend from './model/backend/backend';
+import generateModel from './model/backend/templates/model.template';
+
+export default class Generator {
+    private folderPath;
+
+    constructor(private database: Database, private backend: Backend) {
+        this.folderPath = this.createFolderPath();
+        database.print();
+        backend.print();
+
+        this.copyTemplate();
+        this.generateCode();
+    }
+
+    createFolderPath() {
+        const timestamp = new Date().toLocaleString().replace(/\//g, '-').replace(':', 'h').replace(':', 'm');
+        return `output/${timestamp}`;
+    }
+
+    copyTemplate() {
+        const sourceDirectory = `template`;
+    
+        try {
+            fse.copySync(sourceDirectory, this.folderPath);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    generateCode() {
+        // TODO
+        this.generateModels()
+    }
+
+    generateModels() {
+        this.database.tables.forEach((table) => {
+            const generatedCode = generateModel(table);
+            console.log(generatedCode); // TODO: write to file
+        })
+    }
+}
