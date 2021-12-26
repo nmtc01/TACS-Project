@@ -1,17 +1,19 @@
-var express = require('express');
+const express = require('express');
 const mongoose = require('mongoose');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+// #IMPORTS -> TODO
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
+const friendshipsRouter = require('./routes/friendships');
 
-var app = express();
+const app = express();
 
-var tries = 5; 
+let tries = 5; 
 while (tries > 0) {
-  var set = true;
+  const set = true;
   mongoose.connect(process.env.DB_URL, {
     useNewUrlParser: true,
     user: process.env.DB_USER,
@@ -29,7 +31,7 @@ while (tries > 0) {
         process.exit()
       } else {
         console.log("--- Could not connect to the database, retrying in 5 seconds ---")
-        var waitTill = new Date(new Date().getTime() + 5 * 1000);
+        const waitTill = new Date(new Date().getTime() + 5 * 1000);
         while (waitTill > new Date()) { }
       } 
       set = false;
@@ -47,7 +49,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// #USE_ROUTES
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/friendships', friendshipsRouter);
 
 module.exports = app;

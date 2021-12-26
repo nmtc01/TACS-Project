@@ -4,7 +4,7 @@ import Database from './model/database/database';
 import { TableJSON } from './model/database/types';
 import Backend from './model/backend/backend';
 import { RoutesJSON, RouteTypeJSON } from './model/backend/types';
-
+import Generator from './generator';
 
 function main() {
     console.log("Initializing parser...");
@@ -35,8 +35,7 @@ function main() {
         backend.addRoute(route);
     });
 
-    database.print();
-    backend.print();
+    const codeGenerator: Generator = new Generator(database, backend);
 }
 
 /**
@@ -55,5 +54,5 @@ function copyTemplate() {
     }
 }
 
-copyTemplate();
+//copyTemplate();
 main();
