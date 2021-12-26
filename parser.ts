@@ -4,6 +4,7 @@ import Database from './model/database/database';
 import { TableJSON } from './model/database/types';
 import Backend from './model/backend/backend';
 import { RoutesJSON, RouteTypeJSON } from './model/backend/types';
+import generateModel from './model/backend/templates/model.template';
 
 
 function main() {
@@ -37,6 +38,8 @@ function main() {
 
     database.print();
     backend.print();
+
+    generateCode(backend, database);
 }
 
 /**
@@ -55,5 +58,11 @@ function copyTemplate() {
     }
 }
 
-copyTemplate();
+function generateCode(backend: Backend, database: Database) {
+    const code = generateModel(database.tables[0])
+
+    console.log(code)
+}
+
+//copyTemplate();
 main();

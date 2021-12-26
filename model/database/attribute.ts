@@ -1,7 +1,7 @@
 import type { AttributeJSON, type_ } from './types'
 
 export default class Attribute {
-    constructor(private name: string, private type: type_, private references?: string) {}
+    constructor(public name: string, public type: type_, public references?: string) {}
     
     static deserialize(input: AttributeJSON): Attribute {
         return new Attribute(input.name, input.type, input.references);
