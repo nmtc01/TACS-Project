@@ -1,4 +1,3 @@
-import Attribute from "../../database/attribute";
 import Table from "../../database/table"
 import { type_ } from "../../database/types";
 
@@ -13,19 +12,16 @@ export default function generateModel(table: Table): string {
     const tableNameLC = table.name.charAt(0).toLowerCase() + tableSufix;
     const tableNameUC = table.name.charAt(0).toUpperCase() + tableSufix;
 
+    return `const mongoose = require('mongoose');
+    
+const ${tableNameLC}Schema = new mongoose.Schema({
+    ${generateSchemaAttributes(table)
+}
+});
 
-    return `
-        const mongoose = require('mongoose');
+const ${tableNameUC} = mongoose.model('User', ${tableNameLC}Schema);
 
-        const ${tableNameLC}Schema = new mongoose.Schema({
-            ${generateSchemaAttributes(table)
-        }
-        });
-        
-        const ${tableNameUC} = mongoose.model('User', ${tableNameLC}Schema);
-        
-        exports.${tableNameUC} = ${tableNameUC};
-    `
+exports.${tableNameUC} = ${tableNameUC};`
 }
 
 function generateSchemaAttributes(table: Table): string {
@@ -33,7 +29,7 @@ function generateSchemaAttributes(table: Table): string {
 
     table.attributes.forEach(attribute => {
         if (generatedCode) { 
-            generatedCode += ',\n\t    '
+            generatedCode += ',\n\t'
         }
         generatedCode += `${attribute.name}: { type:  ${generateAttributeType(attribute.type)} }`
     });

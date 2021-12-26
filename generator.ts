@@ -1,3 +1,4 @@
+const fs = require('fs')
 const fse = require('fs-extra');
 import Database from './model/database/database';
 import Backend from './model/backend/backend';
@@ -22,7 +23,7 @@ export default class Generator {
 
     copyTemplate() {
         const sourceDirectory = `template`;
-    
+
         try {
             fse.copySync(sourceDirectory, this.folderPath);
         } catch (error) {
@@ -38,7 +39,15 @@ export default class Generator {
     generateModels() {
         this.database.tables.forEach((table) => {
             const generatedCode = generateModel(table);
-            console.log(generatedCode); // TODO: write to file
+            
+            fs.writeFile(`${this.folderPath}/server/models/${table.name}.js`, generatedCode, (err: string) => {
+                if (err) {
+                    console.error(err)
+                    return;
+                }
+            })
+
+            console.log(generatedCode);
         })
     }
 }
