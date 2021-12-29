@@ -6,7 +6,7 @@ import RouteDELETE from './routeDELETE';
 import { RouteTypeJSON } from './types';
 
 export default class Backend {
-    private routes: Array<Route>;
+    public routes: Array<Route>;
     constructor() { this.routes = new Array<Route>(); }
 
     addRoute(input: RouteTypeJSON): Backend {

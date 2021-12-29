@@ -1,4 +1,4 @@
-export type type_ = "text" | "number" | "date" | undefined;
+export type type_ = "text" | "number" | "date";
 
 export type TableJSON = {
   name: string;

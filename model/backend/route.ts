@@ -1,9 +1,9 @@
 export default abstract class Route {
-    constructor(private name: string, private path: string, private resource: string){}
+    constructor(public name: string, public path: string[], public resource: string){}
 
     print() {
         console.log(`Route: ${this.name}`);
-        console.log(`Path: ${this.path}`);
+        console.log(`Path: ${this.path.join('/')}`);
         console.log(`Resource: ${this.resource}`);
     }
 }

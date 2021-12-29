@@ -1,7 +1,5 @@
 export type type_ = "text" | "number" | "date";
 
-export type path = `/${string}`
-
 export type ElementJSON = {
     name: string,
     type: type_,
@@ -10,7 +8,7 @@ export type ElementJSON = {
 
 export type RouteJSON = {
     name: string;
-    path: path;
+    path: string;
     resource: string;
 }
 
