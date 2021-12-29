@@ -5,7 +5,7 @@ import Backend from './model/backend/backend';
 import generateModel from './model/backend/templates/model.template';
 
 export default class Generator {
-    private folderPath;
+    private folderPath: string;
 
     constructor(private database: Database, private backend: Backend) {
         this.folderPath = this.createFolderPath();
@@ -40,14 +40,16 @@ export default class Generator {
         this.database.tables.forEach((table) => {
             const generatedCode = generateModel(table);
             
+            fs.mkdir(`${this.folderPath}/server/models`, { recursive: true }, (err: string) => {
+                if (err) throw err;
+              });
+
             fs.writeFile(`${this.folderPath}/server/models/${table.name}.js`, generatedCode, (err: string) => {
                 if (err) {
                     console.error(err)
                     return;
                 }
-            })
-
-            console.log(generatedCode);
+            });
         })
     }
 }
