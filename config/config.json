@@ -22,13 +22,11 @@
       "attributes": [
         {
           "name": "friend1",
-          "type": "number",
-          "references": "user.id" 
+          "references": "user" 
         },
         {
           "name": "friend2",
-          "type": "number",
-          "references": "user.id"
+          "references": "user"
         }
       ]
     }
