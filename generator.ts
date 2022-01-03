@@ -2,8 +2,9 @@ const fs = require('fs')
 const fse = require('fs-extra');
 import Database from './model/database/database';
 import Backend from './model/backend/backend';
-import generateModel from './model/backend/templates/model.template';
-import generateRoute from './model/backend/templates/routes.template';
+import generateModel from './generation/model';
+import generateRoutes from './generation/routes';
+import Route from './model/backend/route';
 
 export default class Generator {
     private folderPath: string;
@@ -33,7 +34,6 @@ export default class Generator {
     }
 
     generateCode() {
-        // TODO
         this.generateModels();
         this.generateRoutes();
     }
@@ -56,8 +56,24 @@ export default class Generator {
     }
 
     generateRoutes() {
-        this.backend.routes.forEach((route) => {
-            generateRoute(route);
-        })
+        const routeGroups = {}; // 'resource name' -> 'array of routes'
+        
+        this.backend.routes.forEach((route: Route) => {
+            const resource = route.resource;
+            if (!routeGroups[resource])
+                routeGroups[resource] = [];
+            routeGroups[resource].push(route);
+        });
+
+        for (const resource in routeGroups) {
+            const generatedCode = generateRoutes(routeGroups[resource]);
+              
+            fs.writeFile(`${this.folderPath}/server/routes/${resource}.js`, generatedCode, (err: string) => {
+                if (err) {
+                    console.error(err)
+                    return;
+                }
+            });
+        }
     }
 }

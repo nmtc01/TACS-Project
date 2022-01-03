@@ -1,5 +1,5 @@
-import Table from "../../database/table"
-import { type_ } from "../../database/types";
+import Table from "../model/database/table";
+import { type_ } from "../model/database/types";
 
 export default function generateModel(table: Table): string {
 
