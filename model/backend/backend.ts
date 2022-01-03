@@ -1,40 +1,27 @@
 import Route from './route'
-import RouteGET from './routeGET';
-import RoutePOST from './routePOST';
-import RoutePUT from './routePUT';
-import RouteDELETE from './routeDELETE';
-import { RouteTypeJSON } from './types';
+import { Operation, RouteTypeJSON } from './types';
 
 export default class Backend {
     public routes: Array<Route>;
     constructor() { this.routes = new Array<Route>(); }
 
-    addRoute(input: RouteTypeJSON): Backend {
-        try {
-            let route: Route;
-            switch (input.method) {
-                case "GET":
-                    route = RouteGET.deserialize(input);
-                    break;
-                case "POST":
-                    route = RoutePOST.deserialize(input);
-                    break;
-                case "PUT":
-                    route = RoutePUT.deserialize(input);
-                    break;
-                case "DELETE":
-                    route = RouteDELETE.deserialize(input);
-                    break;
-                default:
-                    throw new Error("Invalid Method");
-            }
-            this.routes.push(route);
+    addRoute(operation: Operation): Backend {
+        switch(operation.method) {
+            case "Get-delete-one":
+                this.routes.push(new Route("DELETE", [""], operation.resource)); // Method, path, resource
+            case "Get-one":
+                this.routes.push(new Route("GET", [""], operation.resource)); // Method, path, resource
+                break;
+            case "Get-all":
+                this.routes.push(new Route("GET", [""], operation.resource)); // Method, path, resource
+                break;
+            case "Add":
+                this.routes.push(new Route("POST", [""], operation.resource, "")); // Method, path, resource, data?? check_resource
+                break;
+            case "Update":
+                this.routes.push(new Route("PUT", [""], operation.resource, "")); // Method, path, resource, data?? check_resource
+                break;
         }
-        catch (error) {
-            console.log(error);
-            console.log("Couldn't parse json file");
-        }
-        
         return this;
     }
 

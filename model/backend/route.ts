@@ -1,8 +1,10 @@
-export default abstract class Route {
-    constructor(public name: string, public path: string[], public resource: string){}
+import { Method } from "./types";
+
+export default class Route {
+    constructor(public method: Method, public path: string[], public resource: string, public data?: Array<Element>) { }
 
     print() {
-        console.log(`Route: ${this.name}`);
+        console.log(`Method: ${this.method}`);
         console.log(`Path: ${this.path.join('/')}`);
         console.log(`Resource: ${this.resource}`);
     }

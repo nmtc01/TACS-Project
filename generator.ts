@@ -3,7 +3,7 @@ const fse = require('fs-extra');
 import Database from './model/database/database';
 import Backend from './model/backend/backend';
 import generateModel from './model/backend/templates/model.template';
-import generateRoutes from './model/backend/templates/routes.template';
+import generateRoute from './model/backend/templates/routes.template';
 
 export default class Generator {
     private folderPath: string;
@@ -56,9 +56,8 @@ export default class Generator {
     }
 
     generateRoutes() {
-        // TODO - generateRoutes receber todas as rotas
         this.backend.routes.forEach((route) => {
-            generateRoutes(route);
+            generateRoute(route);
         })
     }
 }

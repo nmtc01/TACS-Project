@@ -1,10 +1,14 @@
 import type { AttributeJSON, type_ } from './types'
 
 export default class Attribute {
-    constructor(public name: string, public type: type_, public references?: string) {}
+    constructor(public name: string, public type: type_, public required=true, public references?: string) {}
 
     static deserialize(input: AttributeJSON): Attribute {
-        return new Attribute(input.name, input.type, input.references);
+        if (input.references && input.type) {
+            if (input.type != "list")
+                throw new Error("Error in attribute type - not list");
+        }
+        return new Attribute(input.name, input.type, input.required ? input.required : true, input.references);
     }
 
     print() {

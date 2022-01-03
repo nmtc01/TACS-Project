@@ -2,7 +2,7 @@ import Route from "../../backend/route"
 import { toUpper, toLower } from "../../../utils/utils"
 
 // Argument = all routes e retornar numero de strings igual ao numero de ficheiros a serem produzidos
-export default function generateRoutes(route: Route): string {
+export default function generateRoute(route: Route): string {
     let code = "";
     const header = generateHeader(route.resource);
     // TODO
@@ -24,7 +24,7 @@ const router = express.Router();
 const { ${toLower(resource)} } = require('../models/${toUpper(resource)}');`
 }
 
-function generateGetRoute(name:string, path: string[], resource: string): string {
+function generateGetRoute(name: string, path: string[], resource: string): string {
     const variables: string[] = [];
     path.forEach((item) => {
         const variable = item.slice(1);

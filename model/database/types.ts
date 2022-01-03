@@ -1,4 +1,4 @@
-export type type_ = "text" | "number" | "date";
+export type type_ = "text" | "number" | "date" | "bool" | "list";
 
 export type TableJSON = {
   name: string;
@@ -7,5 +7,6 @@ export type TableJSON = {
 export type AttributeJSON = {
   name: string;
   type: type_;
+  required: boolean;
   references?: string;
 }

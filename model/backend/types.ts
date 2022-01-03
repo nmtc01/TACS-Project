@@ -33,3 +33,12 @@ export type RouteDELETEJSON = RouteJSON & {
 export type RouteTypeJSON = RouteGETJSON | RoutePOSTJSON | RoutePUTJSON | RouteDELETEJSON;
 
 export type RoutesJSON = Array<RouteTypeJSON>;
+
+// New types
+
+export type Method = "GET" | "POST" | "PUT" | "DELETE";
+
+export type Operation = {
+    method: "Get-one" | "Get-delete-one" | "Get-all" | "Add" | "Update";
+    resource: string;
+}
