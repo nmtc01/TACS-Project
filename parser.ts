@@ -52,5 +52,4 @@ function main() {
  */
 
 
-//copyTemplate();
 main();

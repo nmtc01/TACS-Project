@@ -1,4 +1,5 @@
 import { Method } from "./types";
+import Element from "./element"
 
 export default class Route {
     constructor(public method: Method, public path: string[], public resource: string, public data?: Array<Element>) { }

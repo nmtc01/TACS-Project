@@ -57,7 +57,12 @@ export default class Generator {
     }
 
     generateRoutes() {
-        const routeGroups = {}; // 'resource name' -> 'array of routes'
+
+        interface RouteMap {
+            [key: string]: Array<Route>
+        }
+
+        const routeGroups: RouteMap = {}; // 'resource name' -> 'array of routes'
         
         this.backend.routes.forEach((route: Route) => {
             const resource = route.resource;

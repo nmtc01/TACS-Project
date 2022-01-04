@@ -23,13 +23,13 @@ export default class Backend {
         } else if(operation.method == "Get-all") {
             this.routes.push(new Route("GET", path, resourceName)); // Method, path, resource
         } else if(operation.method == "Add") {
-            this.routes.push(new Route("POST", path, resourceName, "")); // Method, path, resource, data?? check_resource
+            this.routes.push(new Route("POST", path, resourceName, Backend.tableToElements(resource))); // Method, path, resource, data?? check_resource
         } else if(operation.method == "Update") {
             path.push(':id');
-            this.routes.push(new Route("PUT", path, resourceName, "")); // Method, path, resource, data?? check_resource
+            this.routes.push(new Route("PUT", path, resourceName, Backend.tableToElements(resource))); // Method, path, resource, data?? check_resource
         }
 
-        switch(operation.method) {
+       /*  switch(operation.method) {
             case "Get-delete-one":
                 path.push(':id');
                 this.routes.push(new Route("DELETE", [""], resourceName)); // Method, path, resource
@@ -45,17 +45,17 @@ export default class Backend {
             case "Update":
                 this.routes.push(new Route("PUT", [""], resourceName, "")); // Method, path, resource, data?? check_resource
                 break;
-        }
+        } */
         return this;
     }
 
-    static tableToElements(table: Table) {
+    static tableToElements(table: Table): Array<Element> {
         const elements = Array<Element>();
         table.attributes.forEach((attribute) => {
             const element = new Element(attribute.name, attribute.type, attribute.required)
             elements.push(element)
         });
-
+        return elements;
     }
 
     print() {
