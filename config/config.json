@@ -58,19 +58,19 @@
     "pages": [
       {
         "method": "Get-all",
-        "resource": "user"
+        "resource": "client"
       },
       {
         "method": "Get-delete-one",
-        "resource": "user"
+        "resource": "client"
       },
       {
-        "method": "Get-all",
-        "resource": "user"
+        "method": "Add",
+        "resource": "client"
       },
       {
-        "method": "Get-one",
-        "resource": "user"
+        "method": "Update",
+        "resource": "client"
       }
     ]
   }

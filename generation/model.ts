@@ -11,8 +11,9 @@ export default function generateModel(table: Table): string {
 
     const tableNameLC = table.name.charAt(0).toLowerCase() + tableSufix;
     const tableNameUC = table.name.charAt(0).toUpperCase() + tableSufix;
-
+    // TODO (add ObjectId only if needed)
     return `const mongoose = require('mongoose');
+const ObjectId = mongoose.Schema.Types.ObjectId; 
     
 const ${tableNameLC}Schema = new mongoose.Schema({
     ${generateSchemaAttributes(table)
@@ -32,9 +33,9 @@ function generateSchemaAttributes(table: Table): string {
             generatedCode += ',\n\t'
         }
         if (attribute.type && !attribute.references)
-            generatedCode += `${attribute.name}: { type: ${generateAttributeType(attribute.type)} }`;
+            generatedCode += `'${attribute.name}': { type: ${generateAttributeType(attribute.type)} }`;
         else if (!attribute.type && attribute.references) 
-            generatedCode += `${attribute.name}: { type: Schema.Types.ObjectId, ref: "${attribute.references.charAt(0).toUpperCase() + attribute.references.slice(1)}" }`;
+            generatedCode += `'${attribute.name}': { type: ObjectId, ref: "${attribute.references.charAt(0).toUpperCase() + attribute.references.slice(1)}" }`;
         else 
             throw new Error('Either a type or a references property must be declared!');
     });
@@ -48,6 +49,10 @@ function generateAttributeType(type: type_) {
             return "Number";
         case "text":
             return "String";
+        case "bool":
+            return "Boolean";
+        case "list":
+            return "Array";
         case "date":
             return "Date";
     }
