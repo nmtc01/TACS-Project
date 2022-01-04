@@ -30,16 +30,6 @@ export default function generateRoutes(routes: Array<Route>): string {
                 break;
         }
         code += '\n\n';
-
-        // TODO
-        /*
-            iterate routes array
-            switch case das rotas
-            generate(Method)Route para cada method
-            um ficheiro de código por resource
-            */
-
-        // resource -> string (code string)
     })
 
     return code;

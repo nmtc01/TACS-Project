@@ -5,7 +5,6 @@ import Backend from './model/backend/backend';
 import generateModel from './generation/model';
 import generateRoutes from './generation/routes';
 import Route from './model/backend/route';
-import Table from './model/database/table';
 
 export default class Generator {
     private folderPath: string;
@@ -62,7 +61,7 @@ export default class Generator {
             [key: string]: Array<Route>
         }
 
-        const routeGroups: RouteMap = {}; // 'resource name' -> 'array of routes'
+        const routeGroups: RouteMap = {};
         
         this.backend.routes.forEach((route: Route) => {
             const resource = route.resource;

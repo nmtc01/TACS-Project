@@ -1,7 +1,7 @@
 import Table from '../database/table';
 import Route from './route'
 import Element from './element'
-import { Operation, RouteTypeJSON, type_ } from './types';
+import { Operation } from './types';
 
 export default class Backend {
     public routes: Array<Route>;
@@ -15,37 +15,20 @@ export default class Backend {
 
         if(operation.method == "Get-delete-one") {
             path.push(':id');
-            this.routes.push(new Route("DELETE", path, resourceName)); // Method, path, resource
-            this.routes.push(new Route("GET", path, resourceName)); // Method, path, resource
+            this.routes.push(new Route("DELETE", path, resourceName)); 
+            this.routes.push(new Route("GET", path, resourceName)); 
         } else if(operation.method == "Get-one") {
             path.push(':id');
-            this.routes.push(new Route("GET", path, resourceName)); // Method, path, resource
+            this.routes.push(new Route("GET", path, resourceName)); 
         } else if(operation.method == "Get-all") {
-            this.routes.push(new Route("GET", path, resourceName)); // Method, path, resource
+            this.routes.push(new Route("GET", path, resourceName)); 
         } else if(operation.method == "Add") {
-            this.routes.push(new Route("POST", path, resourceName, Backend.tableToElements(resource))); // Method, path, resource, data?? check_resource
+            this.routes.push(new Route("POST", path, resourceName, Backend.tableToElements(resource)));
         } else if(operation.method == "Update") {
             path.push(':id');
-            this.routes.push(new Route("PUT", path, resourceName, Backend.tableToElements(resource))); // Method, path, resource, data?? check_resource
+            this.routes.push(new Route("PUT", path, resourceName, Backend.tableToElements(resource)));
         }
 
-       /*  switch(operation.method) {
-            case "Get-delete-one":
-                path.push(':id');
-                this.routes.push(new Route("DELETE", [""], resourceName)); // Method, path, resource
-            case "Get-one":
-                this.routes.push(new Route("GET", [""], resourceName)); // Method, path, resource
-                break;
-            case "Get-all":
-                this.routes.push(new Route("GET", [""], resourceName)); // Method, path, resource
-                break;
-            case "Add":
-                this.routes.push(new Route("POST", [""], resourceName, "")); // Method, path, resource, data?? check_resource
-                break;
-            case "Update":
-                this.routes.push(new Route("PUT", [""], resourceName, "")); // Method, path, resource, data?? check_resource
-                break;
-        } */
         return this;
     }
 

@@ -3,7 +3,7 @@ const config = require('./config/config.json');
 import Database from './model/database/database';
 import { TableJSON } from './model/database/types';
 import Backend from './model/backend/backend';
-import { Operation, RoutesJSON, RouteTypeJSON } from './model/backend/types';
+import { Operation } from './model/backend/types';
 import Generator from './generator';
 import Table from './model/database/table';
 
