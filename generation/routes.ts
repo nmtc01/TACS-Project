@@ -62,7 +62,7 @@ function generateGetRoute(path: string[], resource: string): string {
     }
 
     return (
-        `router.get('${finalPath}', async function(_, res) {
+        `router.get('${finalPath}', async function(req, res) {
     try {
         res.send(await ${toUpper(resource)}.find${variables.length > 0 ? 'One' : ''}({${variables}}));
     } catch(err) {

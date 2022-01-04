@@ -5,6 +5,7 @@ import Backend from './model/backend/backend';
 import generateModel from './generation/model';
 import generateRoutes from './generation/routes';
 import Route from './model/backend/route';
+import { toLower } from './utils/utils';
 
 export default class Generator {
     private folderPath: string;
@@ -41,10 +42,10 @@ export default class Generator {
     generateModels() {
         this.database.tables.forEach((table) => {
             const generatedCode = generateModel(table);
-            
+
             fs.mkdir(`${this.folderPath}/server/models`, { recursive: true }, (err: string) => {
                 if (err) throw err;
-              });
+            });
 
             fs.writeFile(`${this.folderPath}/server/models/${table.name}.js`, generatedCode, (err: string) => {
                 if (err) {
@@ -62,7 +63,7 @@ export default class Generator {
         }
 
         const routeGroups: RouteMap = {};
-        
+
         this.backend.routes.forEach((route: Route) => {
             const resource = route.resource;
             if (!routeGroups[resource])
@@ -70,16 +71,34 @@ export default class Generator {
             routeGroups[resource].push(route);
         });
 
+        const routeImports = Array<string>();
+        const routeUses = Array<string>();
+
         for (const resource in routeGroups) {
 
             const generatedCode = generateRoutes(routeGroups[resource]);
-              
+
             fs.writeFile(`${this.folderPath}/server/routes/${resource}.js`, generatedCode, (err: string) => {
                 if (err) {
                     console.error(err)
                     return;
                 }
             });
+
+            const resourceName = toLower(resource);
+
+            routeImports.push(`const ${resourceName}Router = require('./routes/${resourceName}');`)
+            routeUses.push(`app.use('/${resourceName}', ${resourceName}Router);`)
         }
+
+        const appJsPath = `${this.folderPath}/server/app.js`
+
+        let fileData = fs.readFileSync(appJsPath).toString();
+        fileData = fileData.replace(/\/\/ROUTE_IMPORTS/g, routeImports.join('\n'));
+        fileData = fileData.replace(/\/\/ROUTE_USES/g, routeUses.join('\n'));
+
+        fs.writeFile(appJsPath, fileData, function (err: string) {
+            if (err) return console.log(err);
+        });
     }
 }
