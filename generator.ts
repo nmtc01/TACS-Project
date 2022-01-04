@@ -5,6 +5,7 @@ import Backend from './model/backend/backend';
 import generateModel from './generation/model';
 import generateRoutes from './generation/routes';
 import Route from './model/backend/route';
+import Table from './model/database/table';
 
 export default class Generator {
     private folderPath: string;
@@ -66,6 +67,7 @@ export default class Generator {
         });
 
         for (const resource in routeGroups) {
+
             const generatedCode = generateRoutes(routeGroups[resource]);
               
             fs.writeFile(`${this.folderPath}/server/routes/${resource}.js`, generatedCode, (err: string) => {

@@ -1,4 +1,4 @@
-export type type_ = "text" | "number" | "date";
+export type type_ = "text" | "number" | "date" | "bool" | "list";
 
 export type ElementJSON = {
     name: string,

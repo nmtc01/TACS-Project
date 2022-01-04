@@ -5,6 +5,7 @@ import { TableJSON } from './model/database/types';
 import Backend from './model/backend/backend';
 import { Operation, RoutesJSON, RouteTypeJSON } from './model/backend/types';
 import Generator from './generator';
+import Table from './model/database/table';
 
 
 function main() {
@@ -37,7 +38,10 @@ function main() {
             method: page.method,
             resource: page.resource
         }
-        backend.addRoute(operation);
+
+        const table: Table = database.tables.filter((table) => table.name == page.resource)[0]; // TODO
+
+        backend.addRoute(operation, table);
     });
 
     new Generator(database, backend);
