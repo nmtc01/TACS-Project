@@ -8,18 +8,24 @@ axios.interceptors.response.use(function (response) {
     } else return Promise.reject(error);
 });
 
-const SERVER_URL = ''; // TODO
+const SERVER_URL = 'http://localhost:3001'; // TODO
 
 export default class API {
-    url: String;
+    static url: String;
 
-    constructor() {
-        this.url = SERVER_URL
-    }
-
-    buildURL(path: String) {
-        return `${this.url}/${path}`
+    static buildURL(path: String) {
+        return `${SERVER_URL}/${path}`
     }
 
     // Add methods here!
+    static getMethod(action: Function, path: string, errorAction: Function) {
+        axios
+            .get(API.buildURL(path))
+            .then((res) => {
+                action(res.data);
+            })
+            .catch((err) => {
+                errorAction(err);
+            });
+    }
 }

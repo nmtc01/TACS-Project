@@ -3,11 +3,13 @@ const mongoose = require('mongoose');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var cors = require('cors');
 
 var indexRouter = require('./routes/index');
 //ROUTE_IMPORTS
 
 var app = express();
+app.use(cors());
 
 var tries = 5; 
 while (tries > 0) {

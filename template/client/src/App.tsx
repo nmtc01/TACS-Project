@@ -1,17 +1,23 @@
 import './App.css'
-import Form from './components/Form'
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+} from 'react-router-dom';
+import HomePage from './views/HomePage';
+import GetAllPage from './views/GetAllPage';
 
 function App() {
-
+//TODO
   return (
-    <div className="App">
-      <header className="App-header">
-        <p style={styles.title}>
-          Information system!
-        </p>
-        <Form />
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route path='/' element={<HomePage />} />
+          <Route path='/client' element={<GetAllPage name='client' />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
