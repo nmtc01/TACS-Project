@@ -1,23 +1,31 @@
-import './App.css'
 import {
-  BrowserRouter as Router,
-  Routes,
+  HashRouter,
   Route,
-} from 'react-router-dom';
-import HomePage from './views/HomePage';
-import GetAllPage from './views/GetAllPage';
+  Switch
+} from 'react-router-dom'
+import React, {Suspense} from 'react';
+import './scss/style.scss';
+
+const loading = (
+  <div className="pt-3 text-center">
+    <div className="sk-spinner sk-spinner-pulse"></div>
+  </div>
+);
+
+// Containers
+const TheLayout = React.lazy(() => import('./containers/TheLayout'));
 
 function App() {
-//TODO
   return (
-    <Router>
-      <div className="App">
-        <Routes>
-          <Route path='/' element={<HomePage />} />
-          <Route path='/client' element={<GetAllPage name='client' />} />
-        </Routes>
-      </div>
-    </Router>
+    <div className="App">
+      <HashRouter>
+        <Suspense fallback={loading}>
+          <Switch>
+            <Route path='/' component={TheLayout} />
+          </Switch>
+        </Suspense>
+      </HashRouter>
+    </div>
   );
 }
 
