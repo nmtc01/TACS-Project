@@ -1,30 +1,31 @@
 import Route from "../model/backend/route"
 import { toUpper, toLower } from "../utils/utils"
 import Element from "../model/backend/element"
+import config from "../config/config.json"
 
 export default function generateRoutes(routes: Array<Route>): string {
     let code = "";
 
-    if(routes.length < 1) {
+    if (routes.length < 1) {
         return "";
     }
-    
+
     code += generateRoutesHeader(routes[0].resource);
     code += "\n\n";
 
     routes.forEach((route) => {
         switch (route.method) {
             case "GET":
-                code += generateGetRoute(route.path, route.resource); // TODO
+                code += generateGetRoute(route);
                 break;
             case "DELETE":
-                code += generateDeleteRoute(route.path, route.resource); // TODO
+                code += generateDeleteRoute(route);
                 break;
             case "POST":
-                code += generatePostRoute(route);
+                code += generatePutOrPostRoute(route, 'POST');
                 break;
             case "PUT":
-                code += generatePutRoute(route);
+                code += generatePutOrPostRoute(route, 'PUT');
                 break;
             default:
                 break;
@@ -48,72 +49,72 @@ function generateRoutesFooter(): string {
     return `module.exports = router;`
 }
 
-function generateGetRoute(path: string[], resource: string): string {
+function generateGetRoute(route: Route): string {
     const variables: string[] = [];
-    path.forEach((item) => {
+    route.path.forEach((item) => {
         const variable = item.slice(1);
         if (item.charAt(0) === ":")
             variables.push(`'${variable}': req.params.${variable}`);
     });
     let finalPath = '/';
 
-    if(path.length > 1) {
-        finalPath = `/${path.slice(1).join('/')}`
+    if (route.path.length > 1) {
+        finalPath = `/${route.path.slice(1).join('/')}`
     }
 
     return (
         `router.get('${finalPath}', async function(req, res) {
     try {
-        res.send(await ${toUpper(resource)}.find${variables.length > 0 ? 'One' : ''}({${variables}}));
-    } catch(err) {
+        res.send(await ${toUpper(route.resource)}.find${variables.length > 0 ? 'One' : ''}({${variables}}));
+    } catch (err) {
         console.log(err);
     }
 });`
     );
 }
 
-function generateDeleteRoute(path: string[], resource: string): string {
+function generateDeleteRoute(route: Route): string {
     const variables: string[] = [];
-    path.forEach((item) => {
+    route.path.forEach((item) => {
         const variable = item.slice(1);
         if (item.charAt(0) === ":")
             variables.push(`'${variable}': req.params.${variable}`);
     });
     let finalPath = '/';
 
-    if(path.length > 1) {
-        finalPath = `/${path.slice(1).join('/')}`
+    if (route.path.length > 1) {
+        finalPath = `/${route.path.slice(1).join('/')}`
     }
 
     return (
         `router.delete('${finalPath}', async function(req, res) {
     try {
-        const resource = await ${toUpper(resource)}.deleteOne({ 'id': req.params.id });
+        const resource = await ${toUpper(route.resource)}.deleteOne({ 'id': req.params.id });
         return res.send("Deleted successfully: " + resource);
     }
-    catch(err) {
+    catch (err) {
         console.log(err);
     }
 });`
     );
 }
 
-function generatePostRoute(route: Route): string {
+function generatePutOrPostRoute(route: Route, method: 'PUT' | 'POST'): string {
     const variables: string[] = [];
     route.path.forEach((item) => {
         const variable = item.slice(1);
         if (item.charAt(0) === ":")
             variables.push(`'${variable}': req.params.${variable}`);
     });
-    
+
     let finalPath = '/';
 
-    if(route.path.length > 1) {
+    if (route.path.length > 1) {
         finalPath = `/${route.path.slice(1).join('/')}`
     }
 
     if (!route.data) {
-        throw new Error("Property data is mandatory for a POST route!")
+        throw new Error(`Property data is mandatory for a ${method} route!`)
     }
 
     const resourceDataStatements: Array<string> = route.data.map((element: Element) => {
@@ -121,7 +122,7 @@ function generatePostRoute(route: Route): string {
     })
 
     return (
-        `router.post('${finalPath}', function (req, res) {
+        `router.${method.toLowerCase()}('${finalPath}', function (req, res) {
     const ${route.resource}_data = {
         ${resourceDataStatements.join(',\n\t\t')}
     };
@@ -132,48 +133,20 @@ function generatePostRoute(route: Route): string {
             return res.send({ message: '500 - Server Error', errors: [] });
         }
     
-        return res.send("Successfully added new ${toUpper(route.resource)}!");
+        return res.send("Successfully ${method == 'POST' ? 'added' : 'updated'} new ${toUpper(route.resource)}!");
     });
 });`
     );
 }
 
-function generatePutRoute(route: Route): string {
-    const variables: string[] = [];
-    route.path.forEach((item) => {
-        const variable = item.slice(1);
-        if (item.charAt(0) === ":")
-            variables.push(`'${variable}': req.params.${variable}`);
-    });
-
-    let finalPath = '/';
-
-    if(route.path.length > 1) {
-        finalPath = `/${route.path.slice(1).join('/')}`
-    }
-
-    if (!route.data) {
-        throw new Error("Property data is mandatory for a PUT route!")
-    }
-
-    const resourceDataStatements: Array<string> = route.data.map((element: Element) => {
-        return `${element.name}: req.body.${element.name}`;
-    })
-
-    return (
-        `router.put('${finalPath}}', function (req, res) {
-    const ${route.resource}_data = {
-        ${resourceDataStatements.join(',\n\t\t')}
-    };
-  
-    ${toUpper(route.resource)}.create(${route.resource}_data, function (err, resource) {
-        if (err) {
-            console.log(err);
-            return res.send({ message: '500 - Server Error', errors: [] });
-        }
-    
-        return res.send("Successfully added new ${toUpper(route.resource)}!");
-    });
-});`
-    );
+export function generateConfigRoute(): string {
+    return `
+router.get('/config', function (req, res, next) {
+  res.header("Cache-Control", "no-cache, no-store, must-revalidate");
+  res.header("Pragma", "no-cache");
+  res.header("Expires", 0);  
+  res.json(${JSON.stringify(config)});
+}); 
+`;
 }
+

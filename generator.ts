@@ -3,7 +3,7 @@ const fse = require('fs-extra');
 import Database from './model/database/database';
 import Backend from './model/backend/backend';
 import generateModel from './generation/model';
-import generateRoutes from './generation/routes';
+import generateRoutes, { generateConfigRoute } from './generation/routes';
 import Route from './model/backend/route';
 import { toLower } from './utils/utils';
 
@@ -40,20 +40,20 @@ export default class Generator {
     }
 
     generateModels() {
-        this.database.tables.forEach((table) => {
-            const generatedCode = generateModel(table);
+        for (let tableName in this.database.tables) {
+            const generatedCode = generateModel(this.database.tables[tableName]);
 
             fs.mkdir(`${this.folderPath}/server/models`, { recursive: true }, (err: string) => {
                 if (err) throw err;
             });
 
-            fs.writeFile(`${this.folderPath}/server/models/${table.name}.js`, generatedCode, (err: string) => {
+            fs.writeFile(`${this.folderPath}/server/models/${tableName}.js`, generatedCode, (err: string) => {
                 if (err) {
                     console.error(err)
                     return;
                 }
             });
-        })
+        }
     }
 
     generateRoutes() {
@@ -73,6 +73,14 @@ export default class Generator {
 
         const routeImports = Array<string>();
         const routeUses = Array<string>();
+
+        const configCode = generateConfigRoute();
+        fs.appendFile(`${this.folderPath}/server/routes/index.js`, configCode, function (err: string) {
+            if (err) {
+                console.error(err)
+                return;
+            }
+        });
 
         for (const resource in routeGroups) {
 
