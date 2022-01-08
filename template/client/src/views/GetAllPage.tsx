@@ -1,10 +1,7 @@
 import { CDataTable, CButton } from '@coreui/react';
 import { useEffect, useState } from 'react';
 import API from '../api/API';
-
-interface Resource {
-    name: string;
-}
+import { Resource } from '../types';
 
 export default function GetAllPage(resource: Resource) {
     const [errors, setErrors] = useState(<></>);

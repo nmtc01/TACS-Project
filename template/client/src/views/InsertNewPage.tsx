@@ -2,31 +2,72 @@ import {
   Link,
 } from 'react-router-dom';
 
-import { CForm, CInput, CLabel, CInputRadio,  CButton } from '@coreui/react'
+import React, { Suspense, useEffect, useState } from 'react'
 
-export default function InsertNewPage() {
-  let arr = new Array();
-  arr.push(1)
-  // TODO list of links to routes <ul><li></li></ul>, routes on file routes.tsx
+import { CForm, CInput, CLabel, CInputRadio,  CButton } from '@coreui/react'
+import API from '../api/API';
+import { Resource, Attribute } from '../types';
+
+export default function InsertNewPage(resource: Resource) {
+  const [attributes, setAttibutes] = useState([]);
+
+  useEffect(() => {
+    const getAttributes = (attributes: any) => {
+      if (!attributes) {
+        console.warn("Missing attributes!");
+        return;
+      }
+
+      setAttibutes(attributes);
+    }
+
+    API.getMethod(getAttributes, resource.name + '/attributes', () => { });
+  }, []);
+  
   return (
     <CForm style={{width: "60%"}}>
-        {
-          arr.map( (item) => {
-            if (item) 
-              return (
-                <div className="mb-3">
-                  <CLabel htmlFor="exampleInputEmail1">Field name</CLabel>
-                  <CInput type="text" id="exampleInputEmail1" />
-                </div>
-              ) 
-            else return (
+      {attributes.length > 0 && attributes.map((item: Attribute) => {
+        switch (item.type) {
+          case "text":
+            return (
               <div className="mb-3">
-                <CLabel htmlFor="exampleInputEmail1">Field name</CLabel>
+                <CLabel htmlFor="exampleInputEmail1">{item.name}</CLabel>
                 <CInput type="text" id="exampleInputEmail1" />
               </div>
-            )
-          })
+            );
+          case "number":
+            return (
+              <div className="mb-3">
+                <CLabel htmlFor="exampleInputEmail1">{item.name}</CLabel>
+                <CInput type="number" id="exampleInputEmail1" />
+              </div>
+            );
+          case "date": 
+            return (
+              <div className="mb-3">
+                <CLabel htmlFor="exampleInputEmail1">{item.name}</CLabel>
+                <CInput type="date" id="exampleInputEmail1" />
+              </div>
+            );
+          case "bool":
+            return ( 
+              <div className="mb-3">
+                <CLabel htmlFor="exampleInputEmail1">{item.name}</CLabel>
+                <CInput type="number" id="exampleInputEmail1" />
+                <CInputRadio value="True" label="Yes"/>
+                <CInputRadio value="False" label="No"/>
+              </div> 
+            );
+          case "list":
+            return (
+              <div className="mb-3">
+                Dunno
+              </div>
+            );
+          default:
+            return "";
         }
+      })}
         
       <CButton type="submit" color="dark">
         Add New Item

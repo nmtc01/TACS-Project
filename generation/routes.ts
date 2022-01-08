@@ -1,4 +1,6 @@
 import Route from "../model/backend/route"
+import { AttributeJSON } from "../model/database/types"
+
 import { toUpper, toLower } from "../utils/utils"
 import Element from "../model/backend/element"
 import config from "../config/config.json"
@@ -31,7 +33,9 @@ export default function generateRoutes(routes: Array<Route>): string {
                 break;
         }
         code += '\n\n';
-    })
+    });
+
+    code += generateAttributesRoute(routes[0].resource);
 
     code += generateRoutesFooter();
 
@@ -146,6 +150,28 @@ router.get('/config', function (req, res, next) {
   res.header("Pragma", "no-cache");
   res.header("Expires", 0);  
   res.json(${JSON.stringify(config)});
+}); 
+`;
+}
+
+export function generateAttributesRoute(resource: string): string {
+    let attributes: Array<AttributeJSON> = [];
+    for (let i = 0; i < config.resources.length; i++) {
+        if (config.resources[i].name === resource) {
+            attributes = config.resources[i].attributes as Array<AttributeJSON>;
+            break;
+        }
+    }
+    
+    return `
+router.get('/attributes', function (req, res, next) {
+  res.header("Cache-Control", "no-cache, no-store, must-revalidate");
+  res.header("Pragma", "no-cache");
+  res.header("Expires", 0);
+
+  req.params  
+
+  res.json(${JSON.stringify(attributes)});
 }); 
 `;
 }

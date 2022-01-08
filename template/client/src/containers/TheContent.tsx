@@ -35,6 +35,12 @@ function addRoutes(routes: any) {
         });
         break;
       case "Add":
+        routes.push({
+          path: `/${route.resource}/new`, 
+          exact: true,
+          name: route.resource,
+          component: InsertNewPage,
+        });
         break;
       case "Update":
         break;
