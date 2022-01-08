@@ -1,6 +1,7 @@
 import Route from "../model/backend/route"
 import { toUpper, toLower } from "../utils/utils"
 import Element from "../model/backend/element"
+import config from "../config/config.json"
 
 export default function generateRoutes(routes: Array<Route>): string {
     let code = "";
@@ -137,3 +138,15 @@ function generatePutOrPostRoute(route: Route, method: 'PUT' | 'POST'): string {
 });`
     );
 }
+
+export function generateConfigRoute(): string {
+    return `
+router.get('/config', function (req, res, next) {
+  res.header("Cache-Control", "no-cache, no-store, must-revalidate");
+  res.header("Pragma", "no-cache");
+  res.header("Expires", 0);  
+  res.json(${JSON.stringify(config)});
+}); 
+`;
+}
+
