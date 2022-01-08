@@ -3,6 +3,8 @@ import React from 'react';
 //TODO
 const HomePage = React.lazy(() => import('./views/HomePage'));
 const GetAllPage = React.lazy(() => import('./views/GetAllPage'));
+const InsertNewPage = React.lazy(() => import('./views/InsertNewPage'));
+
 
 const routes = [
   { 
@@ -16,6 +18,12 @@ const routes = [
     exact: true,
     name: 'client',
     component: GetAllPage,
+  },
+  {
+    path: '/insert',
+    exact: false,
+    name: 'insert',
+    component: InsertNewPage,
   },
 ];
 
