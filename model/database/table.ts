@@ -2,9 +2,11 @@ import Attribute from './attribute';
 import type { TableJSON, AttributeJSON } from './types'
 
 export default class Table {
-    private attributes: Array<Attribute>;
+    public attributes: Array<Attribute>;
 
-    constructor(private name: string, attributes: Array<Attribute>){ this.attributes = attributes; }
+    constructor(public name: string, attributes: Array<Attribute>) { 
+        this.attributes = attributes; 
+    }
 
     static deserialize(input: TableJSON): Table {
         const name = input.name;

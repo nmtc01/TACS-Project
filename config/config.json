@@ -1,11 +1,12 @@
 {
-  "database": [
+  "resources": [
     {
-      "name": "user",
+      "name": "client",
       "attributes": [
         {
           "name": "id",
-          "type": "number" 
+          "type": "number",
+          "required": false
         },
         {
           "name": "name",
@@ -14,99 +15,62 @@
         {
           "name": "address",
           "type": "text" 
+        },
+        {
+          "name": "cars",
+          "references": "car"
         }
       ]
     },
     {
-      "name": "friendship",
+      "name": "car",
       "attributes": [
         {
-          "name": "friend1",
+          "name": "id",
           "type": "number",
-          "references": "user.id" 
+          "required": false
         },
         {
-          "name": "friend2",
-          "type": "number",
-          "references": "user.id"
+          "name": "license-plate",
+          "type": "text" 
+        },
+        {
+          "name": "is-new",
+          "type": "bool" 
         }
       ]
     }
   ],
-  "frontend": {},
-  "backend": {
-    "routes": [
+  "website": {
+    "styles": {
+      "style1": {
+        "header": {
+
+        },
+        "body": {
+
+        },
+        "footer": {
+
+        }
+      }
+    },
+    "pages": [
       {
-        "name": "All users", 
-        "method": "GET",
-        "path": "/users",
-        "resource": "user"
+        "method": "Get-all",
+        "resource": "client"
       },
       {
-        "name": "User details", 
-        "method": "GET",
-        "path": "/users/:id",
-        "resource": "user"
+        "method": "Get-delete-one",
+        "resource": "client"
       },
       {
-        "name": "Add user", 
-        "method": "POST",
-        "path": "/users",
-        "resource": "user",
-        "data": [
-          {
-            "name": "name",
-            "type": "text",
-            "required": true
-          },
-          {
-            "name": "address",
-            "type": "text",
-            "required": false
-          }
-        ]
+        "method": "Add",
+        "resource": "client"
       },
       {
-        "name": "Update user", 
-        "method": "PUT",
-        "path": "/users/:id",
-        "resource": "user",
-        "data": [
-          {
-            "name": "name",
-            "type": "text",
-            "required": false
-          },
-          {
-            "name": "address",
-            "type": "text",
-            "required": false
-          }
-        ]
-      },
-      {
-        "name": "Delete user", 
-        "method": "DELETE",
-        "path": "/users/:id",
-        "resource": "user"
-      },
-      {
-        "name": "Add friendship", 
-        "method": "POST",
-        "path": "/friendships",
-        "resource": "friendship",
-        "data": [
-          {
-            "name": "friend1",
-            "type": "number",
-            "required": true
-          },
-          {
-            "name": "friend2",
-            "type": "number",
-            "required": true
-          }
-        ]
+        "method": "Update",
+        "resource": "client"
       }
     ]
   }

@@ -1,41 +1,44 @@
+import Table from '../database/table';
 import Route from './route'
-import RouteGET from './routeGET';
-import RoutePOST from './routePOST';
-import RoutePUT from './routePUT';
-import RouteDELETE from './routeDELETE';
-import { RouteTypeJSON } from './types';
+import Element from './element'
+import { Operation } from './types';
 
 export default class Backend {
-    private routes: Array<Route>;
+    public routes: Array<Route>;
     constructor() { this.routes = new Array<Route>(); }
 
-    addRoute(input: RouteTypeJSON): Backend {
-        try {
-            let route: Route;
-            switch (input.method) {
-                case "GET":
-                    route = RouteGET.deserialize(input);
-                    break;
-                case "POST":
-                    route = RoutePOST.deserialize(input);
-                    break;
-                case "PUT":
-                    route = RoutePUT.deserialize(input);
-                    break;
-                case "DELETE":
-                    route = RouteDELETE.deserialize(input);
-                    break;
-                default:
-                    throw new Error("Invalid Method");
-            }
-            this.routes.push(route);
+    addRoute(operation: Operation, resource: Table): Backend {
+
+        const resourceName = operation.resource;
+        const path = Array<string>();
+        path.push(resourceName);
+
+        if(operation.method == "Get-delete-one") {
+            path.push(':id');
+            this.routes.push(new Route("DELETE", path, resourceName)); 
+            this.routes.push(new Route("GET", path, resourceName)); 
+        } else if(operation.method == "Get-one") {
+            path.push(':id');
+            this.routes.push(new Route("GET", path, resourceName)); 
+        } else if(operation.method == "Get-all") {
+            this.routes.push(new Route("GET", path, resourceName)); 
+        } else if(operation.method == "Add") {
+            this.routes.push(new Route("POST", path, resourceName, Backend.tableToElements(resource)));
+        } else if(operation.method == "Update") {
+            path.push(':id');
+            this.routes.push(new Route("PUT", path, resourceName, Backend.tableToElements(resource)));
         }
-        catch (error) {
-            console.log(error);
-            console.log("Couldn't parse json file");
-        }
-        
+
         return this;
+    }
+
+    static tableToElements(table: Table): Array<Element> {
+        const elements = Array<Element>();
+        table.attributes.forEach((attribute) => {
+            const element = new Element(attribute.name, attribute.type, attribute.required)
+            elements.push(element)
+        });
+        return elements;
     }
 
     print() {

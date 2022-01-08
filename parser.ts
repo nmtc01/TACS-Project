@@ -3,57 +3,53 @@ const config = require('./config/config.json');
 import Database from './model/database/database';
 import { TableJSON } from './model/database/types';
 import Backend from './model/backend/backend';
-import { RoutesJSON, RouteTypeJSON } from './model/backend/types';
+import { Operation } from './model/backend/types';
+import Generator from './generator';
+import Table from './model/database/table';
 
 
 function main() {
     console.log("Initializing parser...");
-    console.log(config);
 
     // Parse database
     const database = new Database();
-    if (!config.database) {
-        console.warn("Missing database key!");
+    if (!config.resources) {
+        console.warn("Missing resources key!");
         return;
     }
-    config.database.forEach((table: TableJSON) => {
+    config.resources.forEach((table: TableJSON) => {
         database.addTable(table);
     });
 
     // Parse backend
     const backend = new Backend();
-    if (!config.backend) {
-        console.warn("Missing backend key!");
+    if (!config.website) {
+        console.warn("Missing website key!");
         return;
     }
-    if (!config.backend.routes) {
-        console.warn("Missing routes key!");
+    const pages = config.website.pages;
+    if (!pages) {
+        console.warn("Missing pages key on website!");
         return;
     }
-    const routes: RoutesJSON = config.backend.routes;
-    routes.forEach((route: RouteTypeJSON) => {
-        backend.addRoute(route);
+
+    pages.forEach((page: Operation) => {
+        const operation: Operation = {
+            method: page.method,
+            resource: page.resource
+        }
+
+        const table: Table = database.tables.filter((table) => table.name == page.resource)[0]; // TODO
+
+        backend.addRoute(operation, table);
     });
 
-    database.print();
-    backend.print();
+    new Generator(database, backend);
 }
 
 /**
  * Makes a copy of the project template.
  */
-function copyTemplate() {
-    const timestamp = new Date().toLocaleString().replace(/\//g, '-').replace(':', 'h').replace(':', 'm');
-    
-    const sourceDirectory = `template`;
-    const destinationDirectory = `output/${timestamp}`;
 
-    try {
-        fse.copySync(sourceDirectory, destinationDirectory);
-    } catch (error) {
-        console.error(error);
-    }
-}
 
-copyTemplate();
 main();
