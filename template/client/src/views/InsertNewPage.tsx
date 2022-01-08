@@ -1,9 +1,4 @@
-import {
-  Link,
-} from 'react-router-dom';
-
-import React, { Suspense, useEffect, useState } from 'react'
-
+import { useEffect, useState } from 'react'
 import { CForm, CInput, CLabel, CInputRadio,  CButton } from '@coreui/react'
 import API from '../api/API';
 import { Resource, Attribute } from '../types';
@@ -22,7 +17,7 @@ export default function InsertNewPage(resource: Resource) {
     }
 
     API.getMethod(getAttributes, resource.name + '/attributes', () => { });
-  }, []);
+  }, [resource.name]);
   
   return (
     <CForm style={{width: "60%"}}>
