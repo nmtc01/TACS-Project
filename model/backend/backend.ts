@@ -13,20 +13,26 @@ export default class Backend {
         const path = Array<string>();
         path.push(resourceName);
 
-        if(operation.method == "Get-delete-one") {
-            path.push(':id');
-            this.routes.push(new Route("DELETE", path, resourceName)); 
-            this.routes.push(new Route("GET", path, resourceName)); 
-        } else if(operation.method == "Get-one") {
-            path.push(':id');
-            this.routes.push(new Route("GET", path, resourceName)); 
-        } else if(operation.method == "Get-all") {
-            this.routes.push(new Route("GET", path, resourceName)); 
-        } else if(operation.method == "Add") {
-            this.routes.push(new Route("POST", path, resourceName, Backend.tableToElements(resource)));
-        } else if(operation.method == "Update") {
-            path.push(':id');
-            this.routes.push(new Route("PUT", path, resourceName, Backend.tableToElements(resource)));
+        switch (operation.method) {
+            case "Get-delete-one":
+                path.push(':id');
+                this.routes.push(new Route("DELETE", path, resourceName));
+                this.routes.push(new Route("GET", path, resourceName));
+                break;
+            case "Get-one":
+                path.push(':id');
+                this.routes.push(new Route("GET", path, resourceName));
+                break;
+            case "Get-all":
+                this.routes.push(new Route("GET", path, resourceName));
+                break;
+            case "Add":
+                this.routes.push(new Route("POST", path, resourceName, Backend.tableToElements(resource)));
+                break;
+            case "Update":
+                path.push(':id');
+                this.routes.push(new Route("PUT", path, resourceName, Backend.tableToElements(resource)));
+                break;
         }
 
         return this;

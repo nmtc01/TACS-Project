@@ -40,20 +40,20 @@ export default class Generator {
     }
 
     generateModels() {
-        this.database.tables.forEach((table) => {
-            const generatedCode = generateModel(table);
+        for (let tableName in this.database.tables) {
+            const generatedCode = generateModel(this.database.tables[tableName]);
 
             fs.mkdir(`${this.folderPath}/server/models`, { recursive: true }, (err: string) => {
                 if (err) throw err;
             });
 
-            fs.writeFile(`${this.folderPath}/server/models/${table.name}.js`, generatedCode, (err: string) => {
+            fs.writeFile(`${this.folderPath}/server/models/${tableName}.js`, generatedCode, (err: string) => {
                 if (err) {
                     console.error(err)
                     return;
                 }
             });
-        })
+        }
     }
 
     generateRoutes() {
