@@ -1,12 +1,9 @@
-const fse = require('fs-extra');
 const config = require('./config/config.json');
 import Database from './model/database/database';
 import { TableJSON } from './model/database/types';
 import Backend from './model/backend/backend';
 import { Operation } from './model/backend/types';
 import Generator from './generator';
-import Table from './model/database/table';
-
 
 function main() {
     console.log("Initializing parser...");
@@ -39,17 +36,12 @@ function main() {
             resource: page.resource
         }
 
-        const table: Table = database.tables.filter((table) => table.name == page.resource)[0]; // TODO
+        const table = database.tables[page.resource];
 
         backend.addRoute(operation, table);
     });
 
     new Generator(database, backend);
 }
-
-/**
- * Makes a copy of the project template.
- */
-
 
 main();

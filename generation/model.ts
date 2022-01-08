@@ -17,7 +17,7 @@ const ObjectId = mongoose.Schema.Types.ObjectId;
     
 const ${tableNameLC}Schema = new mongoose.Schema({
     ${generateSchemaAttributes(table)
-}
+        }
 });
 
 const ${tableNameUC} = mongoose.model('${tableNameUC}', ${tableNameLC}Schema);
@@ -29,14 +29,14 @@ function generateSchemaAttributes(table: Table): string {
     let generatedCode = "";
 
     table.attributes.forEach(attribute => {
-        if (generatedCode) { 
+        if (generatedCode) {
             generatedCode += ',\n\t'
         }
         if (attribute.type && !attribute.references)
             generatedCode += `'${attribute.name}': { type: ${generateAttributeType(attribute.type)} }`;
-        else if (!attribute.type && attribute.references) 
+        else if (!attribute.type && attribute.references)
             generatedCode += `'${attribute.name}': { type: ObjectId, ref: "${attribute.references.charAt(0).toUpperCase() + attribute.references.slice(1)}" }`;
-        else 
+        else
             throw new Error('Either a type or a references property must be declared!');
     });
 
