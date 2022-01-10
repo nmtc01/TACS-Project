@@ -8,7 +8,7 @@ import {
 import { CContainer, CFade } from '@coreui/react'
 
 import API from '../api/API';
-  
+
 const loading = (
   <div className="pt-3 text-center">
     <div className="sk-spinner sk-spinner-pulse"></div>
@@ -18,6 +18,8 @@ const loading = (
 const HomePage = React.lazy(() => import('../views/HomePage'));
 const GetAllPage = React.lazy(() => import('../views/GetAllPage'));
 const InsertNewPage = React.lazy(() => import('../views/InsertNewPage'));
+const UpdatePage = React.lazy(() => import('../views/UpdatePage'));
+
 
 function addRoutes(routes: any) {
   routes.forEach((route: any) => {
@@ -28,7 +30,7 @@ function addRoutes(routes: any) {
         break;
       case "Get-all":
         routes.push({
-          path: `/${route.resource}`, 
+          path: `/${route.resource}`,
           exact: true,
           name: route.resource,
           component: GetAllPage,
@@ -36,13 +38,19 @@ function addRoutes(routes: any) {
         break;
       case "Add":
         routes.push({
-          path: `/${route.resource}/new`, 
+          path: `/${route.resource}/new`,
           exact: true,
           name: route.resource,
           component: InsertNewPage,
         });
         break;
       case "Update":
+        routes.push({
+          path: `/${route.resource}/:id/update`,
+          exact: true,
+          name: route.resource,
+          component: UpdatePage,
+        });
         break;
     }
   });
@@ -51,8 +59,8 @@ function addRoutes(routes: any) {
 
 const TheContent = () => {
   const [routes, setRoutes] = useState([
-    { 
-      path: '/', 
+    {
+      path: '/',
       exact: true,
       name: '',
       component: HomePage,
@@ -66,18 +74,18 @@ const TheContent = () => {
         console.warn("Missing pages key on website!");
         return;
       }
-      
+
       setRoutes((oldRoutes) => [
         ...oldRoutes,
         ...addRoutes(pages)
       ]);
     }
 
-    API.getMethod(appendRoutes, 'config', () => {});
+    API.getMethod(appendRoutes, 'config', () => { });
   }, []);
-  
+
   return (
-    <main className="c-main" style={{paddingTop: "4.5rem", paddingBottom: "0.6rem"}}>
+    <main className="c-main" style={{ paddingTop: "4.5rem", paddingBottom: "0.6rem" }}>
       <CContainer fluid className="h-100">
         <HashRouter>
           <Suspense fallback={loading}>
@@ -92,7 +100,7 @@ const TheContent = () => {
                       <CFade className="h-100">
                         <route.component name={route.name} {...props} />
                       </CFade>
-                    )} 
+                    )}
                   />
                 )
               })}

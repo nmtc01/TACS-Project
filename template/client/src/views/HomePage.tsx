@@ -5,7 +5,7 @@ import {
     CCardBody,
     CCardTitle,
     CCardText,
-    CButton 
+    CButton
 } from '@coreui/react'
 import API from '../api/API';
 import { useHistory } from 'react-router-dom';
@@ -32,7 +32,7 @@ export default function HomePage() {
         <CContainer>
             <h1 style={{ padding: "0.5em" }}>Resources</h1>
             <div className="justify-content-center">
-                {resources && resources.map( (item, index) => {
+                {resources && resources.map((item, index) => {
                     return (
                         <CCard style={{ width: '70%', position: 'relative' }} key={`Resource ${index}`}>
                             <CCardBody>
@@ -42,7 +42,7 @@ export default function HomePage() {
                                 style={{ position: 'absolute', top: '0.75em', right: "1em" }}
                                 color="dark"
                                 shape="rounded-circle"
-                                onClick={() => history.push('/'+item)}
+                                onClick={() => history.push('/' + item)}
                             >
                                 Show
                             </CButton>
@@ -50,7 +50,7 @@ export default function HomePage() {
                                 style={{ position: 'absolute', top: '0.75em', right: "7em" }}
                                 color="dark"
                                 shape="rounded-circle"
-                                onClick={() => history.push('/'+item+'/new')}
+                                onClick={() => history.push('/' + item + '/new')}
                             >
                                 Add
                             </CButton>

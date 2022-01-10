@@ -55,15 +55,16 @@ function generateRoutesFooter(): string {
 
 function generateGetRoute(route: Route): string {
     const variables: string[] = [];
-    route.path.forEach((item) => {
-        const variable = item.slice(1);
-        if (item.charAt(0) === ":")
-            variables.push(`'${variable}': req.params.${variable}`);
-    });
+    for(let i = 0; i < route.path.length; i++) {
+        const variable = route.path[i].slice(1);
+        if (route.path[i].charAt(0) === ":") {
+            variables.push(`'_${variable}': req.params.${variable}`);
+            break;
+        }
+    };
     let finalPath = '/';
-
     if (route.path.length > 1) {
-        finalPath = `/${route.path.slice(1).join('/')}`
+        finalPath = `/${route.path.slice(1).join('/')}`;
     }
 
     return (
@@ -78,14 +79,7 @@ function generateGetRoute(route: Route): string {
 }
 
 function generateDeleteRoute(route: Route): string {
-    const variables: string[] = [];
-    route.path.forEach((item) => {
-        const variable = item.slice(1);
-        if (item.charAt(0) === ":")
-            variables.push(`'${variable}': req.params.${variable}`);
-    });
     let finalPath = '/';
-
     if (route.path.length > 1) {
         finalPath = `/${route.path.slice(1).join('/')}`
     }
@@ -93,7 +87,7 @@ function generateDeleteRoute(route: Route): string {
     return (
         `router.delete('${finalPath}', async function(req, res) {
     try {
-        const resource = await ${toUpper(route.resource)}.deleteOne({ 'id': req.params.id });
+        const resource = await ${toUpper(route.resource)}.deleteOne({ '_id': req.params.id });
         return res.send("Deleted successfully: " + resource);
     }
     catch (err) {
@@ -111,11 +105,7 @@ function generatePutOrPostRoute(route: Route, method: 'PUT' | 'POST'): string {
             variables.push(`'${variable}': req.params.${variable}`);
     });
 
-    let finalPath = '/';
-
-    if (route.path.length > 1) {
-        finalPath = `/${route.path.slice(1).join('/')}`
-    }
+    const finalPath = '/';
 
     if (!route.data) {
         throw new Error(`Property data is mandatory for a ${method} route!`)
@@ -131,7 +121,7 @@ function generatePutOrPostRoute(route: Route, method: 'PUT' | 'POST'): string {
         ${resourceDataStatements.join(',\n\t\t')}
     };
   
-    ${toUpper(route.resource)}.create(${route.resource}_data, function (err, resource) {
+    ${toUpper(route.resource)}.${method == 'POST' ? 'create' : 'updateOne'}(${route.resource}_data, function (err, resource) {
         if (err) {
             console.log(err);
             return res.send({ message: '500 - Server Error', errors: [] });

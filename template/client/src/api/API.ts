@@ -39,4 +39,15 @@ export default class API {
                 errorAction(err);
             });
     }
+
+    static putMethod(action: Function, path: string, data: any, errorAction: Function) {
+        axios
+            .put(API.buildURL(path), data)
+            .then((res) => {
+                action(res.data);
+            })
+            .catch((err) => {
+                errorAction(err);
+            });
+    }
 }

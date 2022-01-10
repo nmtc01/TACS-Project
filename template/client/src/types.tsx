@@ -8,3 +8,9 @@ export type Attribute = {
     required?: boolean;
     references?: string;
 }
+
+export interface InsertOrUpdate {
+    type: "insert" | "update";
+    resource: Resource; 
+    _id?: string;
+}
