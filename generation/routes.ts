@@ -35,7 +35,7 @@ export default function generateRoutes(routes: Array<Route>): string {
         code += '\n\n';
     });
 
-    code += generateAttributesRoute(routes[0].resource);
+    //code += generateAttributesRoute(routes[0].resource);
 
     code += generateRoutesFooter();
 
@@ -154,24 +154,44 @@ router.get('/config', function (req, res, next) {
 `;
 }
 
-export function generateAttributesRoute(resource: string): string {
-    let attributes: Array<AttributeJSON> = [];
-    for (let i = 0; i < config.resources.length; i++) {
-        if (config.resources[i].name === resource) {
-            attributes = config.resources[i].attributes as Array<AttributeJSON>;
-            break;
-        }
-    }
-    
+export function generateResourcesRoute(): string {
+    return `
+router.get('/resources', function (req, res, next) {
+  res.header("Cache-Control", "no-cache, no-store, must-revalidate");
+  res.header("Pragma", "no-cache");
+  res.header("Expires", 0);
+  
+	let resources = JSON.parse('${JSON.stringify(config.resources)}');
+	let names = [];
+
+  for (let i = 0; i < resources.length; i++) {
+        names.push(resources[i].name)
+  }
+
+  res.json(names);
+}); 
+`;
+}
+
+export function generateAttributesRoute(): string {
     return `
 router.get('/attributes', function (req, res, next) {
   res.header("Cache-Control", "no-cache, no-store, must-revalidate");
   res.header("Pragma", "no-cache");
   res.header("Expires", 0);
+  
+	let config = JSON.parse('${JSON.stringify(config)}');
+	let resource = req.query.resource;
+	let attributes = [];
 
-  req.params  
+  for (let i = 0; i < config.resources.length; i++) {
+        if (config.resources[i].name === resource) {
+            attributes = config.resources[i].attributes;
+            break;
+        }
+    }
 
-  res.json(${JSON.stringify(attributes)});
+  res.json(attributes);
 }); 
 `;
 }

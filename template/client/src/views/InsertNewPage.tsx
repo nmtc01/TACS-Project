@@ -4,68 +4,94 @@ import API from '../api/API';
 import { Resource, Attribute } from '../types';
 
 export default function InsertNewPage(resource: Resource) {
+  const [body, setBody] = useState({});
   const [attributes, setAttibutes] = useState([]);
 
   useEffect(() => {
-    const getAttributes = (attributes: any) => {
-      if (!attributes) {
+    const getAttributes = (att: any) => {
+      if (!att) {
         console.warn("Missing attributes!");
         return;
       }
 
-      setAttibutes(attributes);
+      setAttibutes(att);
     }
 
-    API.getMethod(getAttributes, resource.name + '/attributes', () => { });
+    API.getMethod(getAttributes, 'attributes?resource=' + resource.name , () => { });
   }, [resource.name]);
   
+  const onChange = (event: any) => {
+    const name = event.target.name;
+    const value = event.target.value;
+    setBody(values => ({ ...values, [name]: value }))
+  }
+
+  const onSubmit = (event: any) => {
+    event.preventDefault();
+    API.postMethod(
+      () => {alert("Request sent!")},
+      resource.name,
+      {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: body
+      },
+      () => {})
+  }
+
   return (
-    <CForm style={{width: "60%"}}>
-      {attributes.length > 0 && attributes.map((item: Attribute) => {
+    <CForm onSubmit={onSubmit}>
+      {attributes.length > 0 && attributes.map((item: Attribute, index) => {
         switch (item.type) {
           case "text":
             return (
-              <div className="mb-3">
-                <CLabel htmlFor="exampleInputEmail1">{item.name}</CLabel>
-                <CInput type="text" id="exampleInputEmail1" />
+              <div key={"field" + index} className="mb-3">
+                <CLabel htmlFor={item.name + "Input"}>{item.name}</CLabel>
+                <CInput type="text" id={item.name + "Input"} name={item.name} onChange={onChange} required={(item.required !== undefined) ? item.required : true}/>
               </div>
             );
           case "number":
             return (
-              <div className="mb-3">
-                <CLabel htmlFor="exampleInputEmail1">{item.name}</CLabel>
-                <CInput type="number" id="exampleInputEmail1" />
+              <div key={"field" + index} className="mb-3">
+                <CLabel htmlFor={item.name + "Input"}>{item.name}</CLabel>
+                <CInput type="number" id={item.name + "Input"} name={item.name} onChange={onChange} required={(item.required !== undefined) ? item.required : true}/>
               </div>
             );
-          case "date": 
+          case "date":
             return (
-              <div className="mb-3">
-                <CLabel htmlFor="exampleInputEmail1">{item.name}</CLabel>
-                <CInput type="date" id="exampleInputEmail1" />
+              <div key={"field" + index} className="mb-3">
+                <CLabel htmlFor={item.name + "Input"}>{item.name}</CLabel>
+                <CInput type="date" id={item.name + "Input"} name={item.name} onChange={onChange} required={(item.required !== undefined) ? item.required : true}/>
               </div>
             );
           case "bool":
-            return ( 
-              <div className="mb-3">
-                <CLabel htmlFor="exampleInputEmail1">{item.name}</CLabel>
-                <CInput type="number" id="exampleInputEmail1" />
-                <CInputRadio value="True" label="Yes"/>
-                <CInputRadio value="False" label="No"/>
-              </div> 
+            return (
+              <div key={"field" + index} className="mb-3">
+                <CLabel htmlFor={item.name + "Input"}>{item.name}</CLabel>
+                <CInput type="number" id={item.name + "Input"} />
+                <CInputRadio value="True" label="Yes" name={item.name} onChange={onChange}/>
+                <CInputRadio value="False" label="No" name={item.name} onChange={onChange}/>
+              </div>
             );
           case "list":
             return (
-              <div className="mb-3">
+              <div key={"field" + index} className="mb-3">
                 Dunno
               </div>
             );
           default:
-            return "";
+            return (
+              <div key={"field" + index} className="mb-3">
+                Dunno
+              </div>
+            );
         }
       })}
-        
+
       <CButton type="submit" color="dark">
-        Add New Item
+        Submit
       </CButton>
     </CForm>
   );

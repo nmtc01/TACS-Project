@@ -5,6 +5,6 @@ export interface Resource {
 export type Attribute = {
     name: string;
     type: "text" | "number" | "date" | "bool" | "list";
-    required: boolean;
+    required?: boolean;
     references?: string;
 }

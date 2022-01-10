@@ -28,4 +28,15 @@ export default class API {
                 errorAction(err);
             });
     }
+
+    static postMethod(action: Function, path: string, data: any, errorAction: Function) {
+        axios
+            .post(API.buildURL(path), data)
+            .then((res) => {
+                action(res.data);
+            })
+            .catch((err) => {
+                errorAction(err);
+            });
+    }
 }
