@@ -42,22 +42,13 @@
     }
   ],
   "website": {
-    "styles": {
-      "style1": {
-        "header": {
-
-        },
-        "body": {
-
-        },
-        "footer": {
-
-        }
-      }
-    },
     "pages": [
       {
         "method": "Get-all",
+        "resource": "client"
+      },
+      {
+        "method": "Get-one",
         "resource": "client"
       },
       {

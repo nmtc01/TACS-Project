@@ -19,7 +19,7 @@ const HomePage = React.lazy(() => import('../views/HomePage'));
 const GetAllPage = React.lazy(() => import('../views/GetAllPage'));
 const InsertNewPage = React.lazy(() => import('../views/InsertNewPage'));
 const UpdatePage = React.lazy(() => import('../views/UpdatePage'));
-
+const GetOnePage = React.lazy(() => import('../views/GetOnePage'));
 
 function addRoutes(routes: any) {
   routes.forEach((route: any) => {
@@ -27,6 +27,12 @@ function addRoutes(routes: any) {
       case "Get-delete-one":
         break;
       case "Get-one":
+        routes.push({
+          path: `/${route.resource}/:id`,
+          exact: true,
+          name: route.resource,
+          component: GetOnePage,
+        });
         break;
       case "Get-all":
         routes.push({
@@ -37,7 +43,7 @@ function addRoutes(routes: any) {
         });
         break;
       case "Add":
-        routes.push({
+        routes.unshift({
           path: `/${route.resource}/new`,
           exact: true,
           name: route.resource,

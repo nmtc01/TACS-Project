@@ -4,7 +4,6 @@ import {
     CCard,
     CCardBody,
     CCardTitle,
-    CCardText,
     CButton
 } from '@coreui/react'
 import API from '../api/API';
@@ -27,7 +26,6 @@ export default function HomePage() {
         API.getMethod(getResources, 'resources', () => { });
     }, [history]);
 
-    // TODO request to api for the resources and map them above
     return (
         <CContainer>
             <h1 style={{ padding: "0.5em" }}>Resources</h1>
