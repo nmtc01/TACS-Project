@@ -52,7 +52,7 @@ export default function GetOnePage(resource: Resource) {
                 {iterateElement()}
             </CListGroup>
             {hasUpdateBtn && (
-                <CButton onClick={() => history.push(`${resource.name}/${params.id}/update`)}>
+                <CButton onClick={() => history.push(`/${resource.name}/${params.id}/update`)}>
                     Edit
                 </CButton>
             )}

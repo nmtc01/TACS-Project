@@ -21,8 +21,10 @@ const InsertNewPage = React.lazy(() => import('../views/InsertNewPage'));
 const UpdatePage = React.lazy(() => import('../views/UpdatePage'));
 const GetOnePage = React.lazy(() => import('../views/GetOnePage'));
 
-function addRoutes(routes: any) {
-  routes.forEach((route: any) => {
+// TODO change to a type route and a type operation
+function addRoutes(pages: any) {
+  const routes: any = [];
+  pages.forEach((route: any) => {
     switch (route.method) {
       case "Get-delete-one":
         break;
