@@ -8,7 +8,8 @@ export default function GetAllPage(resource: Resource) {
     const history = useHistory();
     const [errors, setErrors] = useState(<></>);
     const [resourcesList, setResourcesList] = useState([]);
-    const [hasAddOneBtn, setHasAddOneBtn] = useState(false);
+    const [hasAddBtn, setHasAddBtn] = useState(false);
+    const [hasGetOneBtn, setHasGetOneBtn] = useState(false);
 
     useEffect(() => {
         const handleErrors = (err: any) => {
@@ -24,7 +25,8 @@ export default function GetAllPage(resource: Resource) {
         }
 
         API.getMethod(setResourcesList, resource.name, handleErrors);
-        API.getMethod(setHasAddOneBtn, `${resource.name}/hasAddOne`, handleErrors);
+        API.getMethod(setHasGetOneBtn, `${resource.name}/hasGetOne`, handleErrors);
+        API.getMethod(setHasAddBtn, `${resource.name}/hasAdd`, handleErrors);
     }, [resource.name]);
 
     const fields = [
@@ -50,6 +52,9 @@ export default function GetAllPage(resource: Resource) {
                 hover
                 sorter
                 pagination
+                onRowClick={(item: any) => 
+                    history.push(`/${resource.name}/${item._id}`)
+                }
                 scopedSlots={{
                     _id: (item: any) => (
                         <td>
@@ -59,20 +64,22 @@ export default function GetAllPage(resource: Resource) {
                     show_details: () => {
                         return (
                             <td className="py-2">
-                                <CButton
-                                    color="primary"
-                                    variant="outline"
-                                    shape="square"
-                                    size="sm"
-                                >
-                                    Show
-                                </CButton>
+                                {hasGetOneBtn && (
+                                    <CButton
+                                        color="primary"
+                                        variant="outline"
+                                        shape="square"
+                                        size="sm"
+                                    >
+                                        Show
+                                    </CButton>
+                                )}
                             </td>
                         );
                     },
                 }}
             />
-            {hasAddOneBtn && (
+            {hasAddBtn && (
                 <CButton
                     color="primary"
                     onClick={() => history.push('/' + resource.name + '/new')}

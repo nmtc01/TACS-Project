@@ -2,6 +2,7 @@ import Route from "../model/backend/route"
 import { toUpper, toLower } from "../utils/utils"
 import Element from "../model/backend/element"
 import config from "../config/config.json"
+import { MethodType } from "../model/backend/types"
 
 export default function generateRoutes(routes: Array<Route>): string {
     let code = "";
@@ -10,9 +11,14 @@ export default function generateRoutes(routes: Array<Route>): string {
         return "";
     }
 
-    code += generateRoutesHeader(routes[0].resource);
+    const resourceName = routes[0].resource;
+    code += generateRoutesHeader(resourceName);
     code += "\n";
-    code += generateHasAddOneRoute(routes[0].resource);
+    code += generateHasGetOneRoute(resourceName);
+    code += "\n";
+    code += generateHasAddRoute(resourceName);
+    code += "\n";
+    code += generateHasUpdateRoute(resourceName);
     code += "\n";
 
     routes.forEach((route) => {
@@ -184,24 +190,41 @@ router.get('/attributes', function (req, res, next) {
 `;
 }
 
-function generateHasAddOneRoute(resource: string): string {
+function generateHasMethodRoute(resource: string, method: MethodType): string {
     const pages = config.website.pages;
-    let hasAddOne = false;
+    let hasMethod = false;
     if (pages) {
         for(let i = 0; i < pages.length; i++) {
-            if (pages[i].resource === resource && pages[i].method === "Get-one") {
-                hasAddOne = true;
+            if (pages[i].resource === resource && pages[i].method === method) {
+                hasMethod = true;
                 break;
             }
         }
     }
+
+    const methodArray = method.split("-");
+    methodArray.map((item) => {
+        return item.charAt(0).toUpperCase() + item.slice(1);
+    });
+    const endpoint = `/has${methodArray.join("")}`;
     return `
-router.get('/hasAddOne', async function (req, res, next) {
+router.get('${endpoint}', async function (req, res, next) {
   res.header("Cache-Control", "no-cache, no-store, must-revalidate");
   res.header("Pragma", "no-cache");
   res.header("Expires", 0);  
-  res.send(${hasAddOne});
+  res.send(${hasMethod});
 }); 
-`;
+`;  
 }
 
+function generateHasGetOneRoute(resource: string): string {
+    return generateHasMethodRoute(resource, "Get-one");
+}
+
+function generateHasAddRoute(resource: string): string {
+    return generateHasMethodRoute(resource, "Add");
+}
+
+function generateHasUpdateRoute(resource: string): string {
+    return generateHasMethodRoute(resource, "Update");
+}

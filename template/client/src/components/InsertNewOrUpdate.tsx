@@ -21,7 +21,6 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
     }
 
     const getValues = (val: any) => {
-      console.log(val)
       setBody(val);
     }
 

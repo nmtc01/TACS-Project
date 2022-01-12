@@ -3,10 +3,13 @@ import { useEffect, useState } from 'react';
 import API from '../api/API';
 import { Resource } from '../types';
 import { useParams } from "react-router";
+import { useHistory } from 'react-router-dom';
 
 export default function GetOnePage(resource: Resource) {
+    const history = useHistory();
     const [errors, setErrors] = useState(<></>);
     const [element, setElement] = useState(Object);
+    const [hasUpdateBtn, setHasUpdateBtn] = useState(false);
     const params: any = useParams();
 
     useEffect(() => {
@@ -23,6 +26,7 @@ export default function GetOnePage(resource: Resource) {
         }
 
         API.getMethod(setElement, `${resource.name}/${params.id}`, handleErrors);
+        API.getMethod(setHasUpdateBtn, `${resource.name}/hasUpdate`, handleErrors);
     }, [resource, params.id]);
 
     const iterateElement = () => {
@@ -47,9 +51,11 @@ export default function GetOnePage(resource: Resource) {
             <CListGroup>
                 {iterateElement()}
             </CListGroup>
-            <CButton>
-                Edit
-            </CButton>
+            {hasUpdateBtn && (
+                <CButton onClick={() => history.push(`${resource.name}/${params.id}/update`)}>
+                    Edit
+                </CButton>
+            )}
         </CCard>
     );
 }
