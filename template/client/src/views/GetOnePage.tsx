@@ -22,7 +22,7 @@ export default function GetOnePage(resource: Resource) {
             );
         }
 
-        API.getMethod(setElement, `${resource.name}/${params.id}`, handleErrors)
+        API.getMethod(setElement, `${resource.name}/${params.id}`, handleErrors);
     }, [resource, params.id]);
 
     const iterateElement = () => {

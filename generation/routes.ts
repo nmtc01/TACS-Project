@@ -1,6 +1,4 @@
 import Route from "../model/backend/route"
-import { AttributeJSON } from "../model/database/types"
-
 import { toUpper, toLower } from "../utils/utils"
 import Element from "../model/backend/element"
 import config from "../config/config.json"
@@ -13,7 +11,9 @@ export default function generateRoutes(routes: Array<Route>): string {
     }
 
     code += generateRoutesHeader(routes[0].resource);
-    code += "\n\n";
+    code += "\n";
+    code += generateHasAddOneRoute(routes[0].resource);
+    code += "\n";
 
     routes.forEach((route) => {
         switch (route.method) {
@@ -34,8 +34,6 @@ export default function generateRoutes(routes: Array<Route>): string {
         }
         code += '\n\n';
     });
-
-    //code += generateAttributesRoute(routes[0].resource);
 
     code += generateRoutesFooter();
 
@@ -182,6 +180,27 @@ router.get('/attributes', function (req, res, next) {
     }
 
   res.json(attributes);
+}); 
+`;
+}
+
+function generateHasAddOneRoute(resource: string): string {
+    const pages = config.website.pages;
+    let hasAddOne = false;
+    if (pages) {
+        for(let i = 0; i < pages.length; i++) {
+            if (pages[i].resource === resource && pages[i].method === "Get-one") {
+                hasAddOne = true;
+                break;
+            }
+        }
+    }
+    return `
+router.get('/hasAddOne', async function (req, res, next) {
+  res.header("Cache-Control", "no-cache, no-store, must-revalidate");
+  res.header("Pragma", "no-cache");
+  res.header("Expires", 0);  
+  res.send(${hasAddOne});
 }); 
 `;
 }

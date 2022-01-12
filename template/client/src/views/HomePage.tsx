@@ -44,14 +44,6 @@ export default function HomePage() {
                             >
                                 Show
                             </CButton>
-                            <CButton
-                                style={{ position: 'absolute', top: '0.75em', right: "7em" }}
-                                color="dark"
-                                shape="rounded-circle"
-                                onClick={() => history.push('/' + item + '/new')}
-                            >
-                                Add
-                            </CButton>
                         </CCard>)
                 })}
             </div>

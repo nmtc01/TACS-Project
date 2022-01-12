@@ -11,7 +11,7 @@ export default function generateModel(table: Table): string {
 
     const tableNameLC = table.name.charAt(0).toLowerCase() + tableSufix;
     const tableNameUC = table.name.charAt(0).toUpperCase() + tableSufix;
-    // TODO (add ObjectId only if needed)
+    
     return `const mongoose = require('mongoose');
 const ObjectId = mongoose.Schema.Types.ObjectId; 
     

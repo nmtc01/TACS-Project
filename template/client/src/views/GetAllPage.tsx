@@ -2,10 +2,13 @@ import { CDataTable, CButton } from '@coreui/react';
 import { useEffect, useState } from 'react';
 import API from '../api/API';
 import { Resource } from '../types';
+import { useHistory } from 'react-router-dom';
 
 export default function GetAllPage(resource: Resource) {
+    const history = useHistory();
     const [errors, setErrors] = useState(<></>);
     const [resourcesList, setResourcesList] = useState([]);
+    const [hasAddOneBtn, setHasAddOneBtn] = useState(false);
 
     useEffect(() => {
         const handleErrors = (err: any) => {
@@ -20,8 +23,9 @@ export default function GetAllPage(resource: Resource) {
             );
         }
 
-        API.getMethod(setResourcesList, resource.name, handleErrors)
-    }, [resource]);
+        API.getMethod(setResourcesList, resource.name, handleErrors);
+        API.getMethod(setHasAddOneBtn, `${resource.name}/hasAddOne`, handleErrors);
+    }, [resource.name]);
 
     const fields = [
         { key: '_id', label: 'ID', _style: { width: '30%' } },
@@ -68,6 +72,14 @@ export default function GetAllPage(resource: Resource) {
                     },
                 }}
             />
+            {hasAddOneBtn && (
+                <CButton
+                    color="primary"
+                    onClick={() => history.push('/' + resource.name + '/new')}
+                >
+                    Add
+                </CButton>
+            )}
         </div>
     );
 }
