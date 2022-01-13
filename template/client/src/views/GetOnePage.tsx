@@ -9,24 +9,26 @@ export default function GetOnePage(resource: Resource) {
     const history = useHistory();
     const [errors, setErrors] = useState(<></>);
     const [element, setElement] = useState(Object);
+    const [hasDeleteBtn, setHasDeleteBtn] = useState(false);
     const [hasUpdateBtn, setHasUpdateBtn] = useState(false);
     const params: any = useParams();
 
-    useEffect(() => {
-        const handleErrors = (err: any) => {
-            setErrors(
-                <div className="alert alert-danger">
-                    <ul className="my-0">
-                    {err.response.data.errors.map((err: any) => (
-                        <li key={err.message}>{err.message}</li>
-                    ))}
-                    </ul>
-                </div>
-            );
-        }
+    const handleErrors = (err: any) => {
+        setErrors(
+            <div className="alert alert-danger">
+                <ul className="my-0">
+                {err.response.data.errors.map((err: any) => (
+                    <li key={err.message}>{err.message}</li>
+                ))}
+                </ul>
+            </div>
+        );
+    }
 
+    useEffect(() => {
         API.getMethod(setElement, `${resource.name}/${params.id}`, handleErrors);
         API.getMethod(setHasUpdateBtn, `${resource.name}/hasUpdate`, handleErrors);
+        API.getMethod(setHasDeleteBtn, `${resource.name}/hasDelete`, handleErrors);
     }, [resource, params.id]);
 
     const iterateElement = () => {
@@ -42,6 +44,13 @@ export default function GetOnePage(resource: Resource) {
         return list;
     }
 
+    const handleDeleteElement = () => {
+        if (hasDeleteBtn) {
+            API.deleteMethod(`${resource.name}/${params.id}`, handleErrors);
+            history.push(`/${resource.name}`);
+        }
+    }
+
     return (
         <CCard>
             <CCardHeader>
@@ -52,8 +61,13 @@ export default function GetOnePage(resource: Resource) {
                 {iterateElement()}
             </CListGroup>
             {hasUpdateBtn && (
-                <CButton onClick={() => history.push(`/${resource.name}/${params.id}/update`)}>
+                <CButton onClick={() => history.push(`/${resource.name}/${params.id}/update`)} color='primary'>
                     Edit
+                </CButton>
+            )}
+            {hasDeleteBtn && (
+                <CButton onClick={handleDeleteElement} color='secondary'>
+                    Delete
                 </CButton>
             )}
         </CCard>

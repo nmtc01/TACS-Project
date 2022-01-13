@@ -52,7 +52,7 @@
         "resource": "client"
       },
       {
-        "method": "Get-delete-one",
+        "method": "Delete",
         "resource": "client"
       },
       {

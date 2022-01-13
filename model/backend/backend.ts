@@ -14,10 +14,9 @@ export default class Backend {
         path.push(resourceName);
 
         switch (operation.method) {
-            case "Get-delete-one":
+            case "Delete":
                 path.push(':id');
                 this.routes.push(new Route("DELETE", path, resourceName));
-                this.routes.push(new Route("GET", path, resourceName));
                 break;
             case "Get-one":
                 path.push(':id');

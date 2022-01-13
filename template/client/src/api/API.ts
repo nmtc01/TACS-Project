@@ -50,4 +50,12 @@ export default class API {
                 errorAction(err);
             });
     }
+
+    static deleteMethod(path: string, errorAction: Function) {
+        axios
+            .delete(API.buildURL(path))
+            .catch((err) => {
+                errorAction(err);
+            });
+    }
 }

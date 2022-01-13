@@ -20,6 +20,8 @@ export default function generateRoutes(routes: Array<Route>): string {
     code += "\n";
     code += generateHasUpdateRoute(resourceName);
     code += "\n";
+    code += generateHasDeleteRoute(resourceName);
+    code += "\n";
 
     routes.forEach((route) => {
         switch (route.method) {
@@ -131,7 +133,7 @@ function generatePutOrPostRoute(route: Route, method: 'PUT' | 'POST'): string {
             return res.send({ message: '500 - Server Error', errors: [] });
         }
     
-        return res.send("Successfully ${method == 'POST' ? 'added' : 'updated'} new ${toUpper(route.resource)}!");
+        return res.send(${method == 'POST' ? 'resource._id' : true});
     });
 });`
     );
@@ -227,4 +229,8 @@ function generateHasAddRoute(resource: string): string {
 
 function generateHasUpdateRoute(resource: string): string {
     return generateHasMethodRoute(resource, "Update");
+}
+
+function generateHasDeleteRoute(resource: string): string {
+    return generateHasMethodRoute(resource, "Delete");
 }

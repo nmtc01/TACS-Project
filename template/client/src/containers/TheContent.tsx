@@ -26,7 +26,7 @@ function addRoutes(pages: Operation[]) {
   const routes: RouteType[] = [];
   pages.forEach((route: Operation) => {
     switch (route.method) {
-      case "Get-delete-one":
+      case "Delete":
         break;
       case "Get-one":
         routes.push({

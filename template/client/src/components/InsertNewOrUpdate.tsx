@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react'
 import { CForm, CInput, CLabel, CInputRadio, CButton } from '@coreui/react'
 import API from '../api/API';
 import { Attribute, InsertOrUpdate } from '../types';
+import { useHistory } from 'react-router-dom';
 
 export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
+  const history = useHistory();
   const [body, setBody] = useState(Object);
   const [attributes, setAttibutes] = useState([]);
 
@@ -14,9 +16,6 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
         console.warn("Missing attributes!");
         return;
       }
-
-      // Find references -> getAll(references)
-
       setAttibutes(att);
     }
 
@@ -40,14 +39,14 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
     event.preventDefault();
     if (insertOrUpdate.type === "insert") {
       API.postMethod(
-        () => { alert("Request sent!") },
+        (newId: string) => { history.push(`/${insertOrUpdate.resource.name}/${newId}`) },
         insertOrUpdate.resource.name,
         body,
         () => { })
     } else if (insertOrUpdate.type === "update") {
       setBody({ ...body, _id: insertOrUpdate._id })
       API.putMethod(
-        () => { alert("Request sent!") },
+        (success: boolean) => { if(success) history.push(`/${insertOrUpdate.resource.name}/${insertOrUpdate._id}`) },
         insertOrUpdate.resource.name,
         body,
         () => { })
