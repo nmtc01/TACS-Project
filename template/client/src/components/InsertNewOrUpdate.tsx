@@ -68,11 +68,23 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
         () => { })
     }
   }
-console.log(attributes);
+
   return (
     <CForm onSubmit={onSubmit}>
       {attributes.length > 0 && attributes.map((item: Attribute & { options: any[] }, index) => {
-        switch (item.type) {
+        console.log(item);
+        if (!item.type && item.references && item.options)
+          return (
+            <div key={"field" + index} className="mb-3">
+                <label htmlFor={item.references}>Choose a {item.references}:</label>
+                {item.references && (
+                  <select name={item.references} id={item.references}>
+                    {item.options}
+                  </select>
+                )}
+            </div>
+          );
+        else switch (item.type) {
           case "text":
             return (
               <div key={"field" + index} className="mb-3">
@@ -129,16 +141,7 @@ console.log(attributes);
               </div>
             );
           default:
-            return (
-                <div key={"field" + index} className="mb-3">
-                    <label htmlFor={item.references}>Choose a {item.references}:</label>
-                    {item.references && (
-                      <select name={item.references} id={item.references}>
-                        {item.options}
-                      </select>
-                    )}
-                </div>
-              );
+            return "";
         }
       })}
 
