@@ -7,14 +7,14 @@ import { useHistory } from 'react-router-dom';
 export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
   const history = useHistory();
   const [body, setBody] = useState(Object);
-  const [attributes, setAttibutes] = useState([]);
-  const [options, setOptions] = useState(Object);
+  const [attributes, setAttibutes] = useState<(Attribute & { options: any[] })[]>([]);
 
   useEffect(() => {
-    const handleOptions = (data: any[], name: string) => {
-      let d = options;
-      d[name] = data;
-      setOptions(d);
+    const handleOptions = async (data: any[], att: any) => {
+      att.options = [];
+      data.forEach((option, index) => {
+        att.options.push(<option key={`option-${index}`} value={option._id}>{option._id}</option>);
+      })
     }
 
     const getAttributes = (att: any) => {
@@ -24,7 +24,7 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
       }
       for (let i = 0; i < att.length; i++) {
         if (att[i].references && !att[i].type)
-          API.getMethod((data: any) => handleOptions(data, att[i].references), att[i].references, () => {});
+          API.getAwaitMethod((data: any) => handleOptions(data, att[i]), att[i].references, () => {});
       }
       setAttibutes(att);
     }
@@ -37,7 +37,7 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
     if (insertOrUpdate.type === "update") {
       API.getMethod(getValues, insertOrUpdate.resource.name + '/' + insertOrUpdate._id, () => { })
     }
-  }, [insertOrUpdate.resource.name, insertOrUpdate.type, insertOrUpdate._id, options]);
+  }, [insertOrUpdate.resource.name, insertOrUpdate.type, insertOrUpdate._id]);
 
   const onChange = (event: any) => {
     const name = event.target.name;
@@ -68,10 +68,10 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
         () => { })
     }
   }
-
+console.log(attributes);
   return (
     <CForm onSubmit={onSubmit}>
-      {attributes.length > 0 && attributes.map((item: Attribute, index) => {
+      {attributes.length > 0 && attributes.map((item: Attribute & { options: any[] }, index) => {
         switch (item.type) {
           case "text":
             return (
@@ -134,9 +134,7 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
                     <label htmlFor={item.references}>Choose a {item.references}:</label>
                     {item.references && (
                       <select name={item.references} id={item.references}>
-                        {options[item.references] && options[item.references].map((option: any, index: number) =>
-                          <option key={`option-${index}`} value={option._id}>{option._id}</option>
-                        )}
+                        {item.options}
                       </select>
                     )}
                 </div>

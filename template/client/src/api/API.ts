@@ -29,6 +29,17 @@ export default class API {
             });
     }
 
+    static async getAwaitMethod(action: Function, path: string, errorAction: Function) {
+        await axios
+            .get(API.buildURL(path))
+            .then((res) => {
+                action(res.data);
+            })
+            .catch((err) => {
+                errorAction(err);
+            });
+    }
+
     static postMethod(action: Function, path: string, data: any, errorAction: Function) {
         axios
             .post(API.buildURL(path), data)
