@@ -9,11 +9,4 @@ function App() {
   );
 }
 
-const styles = {
-  title: {
-    fontWeight: 'bold',
-    fontSize: 25
-  },
-}
-
 export default App;

@@ -14,3 +14,17 @@ export interface InsertOrUpdate {
     resource: Resource; 
     _id?: string;
 }
+
+export type MethodType = "Get-one" | "Get-delete-one" | "Get-all" | "Add" | "Update";
+
+export type Operation = {
+    method: MethodType;
+    resource: string;
+}
+
+export type RouteType = {
+    path: string,
+    exact: boolean,
+    name: string,
+    component: React.LazyExoticComponent<(resource: Resource) => JSX.Element>,
+}

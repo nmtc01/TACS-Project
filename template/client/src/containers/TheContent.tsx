@@ -8,6 +8,7 @@ import {
 import { CContainer, CFade } from '@coreui/react'
 
 import API from '../api/API';
+import { Operation, RouteType } from '../types';
 
 const loading = (
   <div className="pt-3 text-center">
@@ -21,10 +22,9 @@ const InsertNewPage = React.lazy(() => import('../views/InsertNewPage'));
 const UpdatePage = React.lazy(() => import('../views/UpdatePage'));
 const GetOnePage = React.lazy(() => import('../views/GetOnePage'));
 
-// TODO change to a type route and a type operation
-function addRoutes(pages: any) {
-  const routes: any = [];
-  pages.forEach((route: any) => {
+function addRoutes(pages: Operation[]) {
+  const routes: RouteType[] = [];
+  pages.forEach((route: Operation) => {
     switch (route.method) {
       case "Get-delete-one":
         break;
@@ -70,20 +70,20 @@ const TheContent = () => {
     {
       path: '/',
       exact: true,
-      name: '',
+      name: 'Resources',
       component: HomePage,
     },
   ]);
 
   useEffect(() => {
     const appendRoutes = (config: any) => {
-      const pages = config.website.pages;
+      const pages: Operation[] = config.website.pages;
       if (!pages) {
         console.warn("Missing pages key on website!");
         return;
       }
 
-      setRoutes((oldRoutes) => [
+      setRoutes((oldRoutes: RouteType[]) => [
         ...oldRoutes,
         ...addRoutes(pages)
       ]);

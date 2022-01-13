@@ -8,8 +8,9 @@ import {
 } from '@coreui/react'
 import API from '../api/API';
 import { useHistory } from 'react-router-dom';
+import { Resource } from '../types';
 
-export default function HomePage() {
+export default function HomePage(resource: Resource) {
     const history = useHistory();
     const [errors, setErrors] = useState(<></>);
     const [config, setConfig] = useState(Object);
@@ -62,7 +63,7 @@ export default function HomePage() {
     return (
         <CContainer>
             {errors}
-            <h1 style={{ padding: "0.5em" }}>Resources</h1>
+            <h1 style={{ padding: "0.5em" }}>{resource.name}</h1>
             <div className="justify-content-center">
                 {resources && resources.map((item, index) => {
                     return (
