@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { CForm, CInput, CLabel, CInputRadio, CButton } from '@coreui/react'
+import { CForm, CInput, CLabel, CButton, CInputCheckbox } from '@coreui/react'
 import API from '../api/API';
 import { Attribute, InsertOrUpdate } from '../types';
 import { useHistory } from 'react-router-dom';
@@ -8,13 +8,23 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
   const history = useHistory();
   const [body, setBody] = useState(Object);
   const [attributes, setAttibutes] = useState([]);
-
+  const [options, setOptions] = useState(Object);
 
   useEffect(() => {
+    const handleOptions = (data: any[], name: string) => {
+      let d = options;
+      d[name] = data;
+      setOptions(d);
+    }
+
     const getAttributes = (att: any) => {
       if (!att) {
         console.warn("Missing attributes!");
         return;
+      }
+      for (let i = 0; i < att.length; i++) {
+        if (att[i].references && !att[i].type)
+          API.getMethod((data: any) => handleOptions(data, att[i].references), att[i].references, () => {});
       }
       setAttibutes(att);
     }
@@ -27,11 +37,17 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
     if (insertOrUpdate.type === "update") {
       API.getMethod(getValues, insertOrUpdate.resource.name + '/' + insertOrUpdate._id, () => { })
     }
-  }, [insertOrUpdate.resource.name, insertOrUpdate.type, insertOrUpdate._id]);
+  }, [insertOrUpdate.resource.name, insertOrUpdate.type, insertOrUpdate._id, options]);
 
   const onChange = (event: any) => {
     const name = event.target.name;
     const value = event.target.value;
+    setBody((values: Object) => ({ ...values, [name]: value }))
+  }
+
+  const onCheckboxChange = (event: any) => {
+    const name = event.target.name;
+    const value = event.target.value === "on" ? true : false;
     setBody((values: Object) => ({ ...values, [name]: value }))
   }
 
@@ -103,8 +119,7 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
             return (
               <div key={"field" + index} className="mb-3">
                 <CLabel htmlFor={item.name + "Input"}>{item.name}</CLabel>
-                <CInputRadio value="True" label="Yes" name={item.name} onChange={onChange} />
-                <CInputRadio value="False" label="No" name={item.name} onChange={onChange} />
+                <CInputCheckbox name={item.name} onChange={onCheckboxChange} />
               </div>
             );
           case "list":
@@ -115,10 +130,17 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
             );
           default:
             return (
-              <div key={"field" + index} className="mb-3">
-                Dunno
-              </div>
-            );
+                <div key={"field" + index} className="mb-3">
+                    <label htmlFor={item.references}>Choose a {item.references}:</label>
+                    {item.references && (
+                      <select name={item.references} id={item.references}>
+                        {options[item.references] && options[item.references].map((option: any, index: number) =>
+                          <option key={`option-${index}`} value={option._id}>{option._id}</option>
+                        )}
+                      </select>
+                    )}
+                </div>
+              );
         }
       })}
 

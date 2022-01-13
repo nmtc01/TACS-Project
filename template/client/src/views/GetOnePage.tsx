@@ -34,7 +34,7 @@ export default function GetOnePage(resource: Resource) {
     const iterateElement = () => {
         let list = [];
         for (let key in element) {
-            if (key === "__v") break;
+            if (key === "__v") continue;
             list.push(
                 <CListGroupItem key={"attribute-" + key}>
                     {key}: {element[key]}

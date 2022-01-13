@@ -17,7 +17,7 @@
           "type": "text" 
         },
         {
-          "name": "cars",
+          "name": "car",
           "references": "car"
         }
       ]
@@ -31,11 +31,11 @@
           "required": false
         },
         {
-          "name": "license-plate",
+          "name": "license_plate",
           "type": "text" 
         },
         {
-          "name": "is-new",
+          "name": "is_new",
           "type": "bool" 
         }
       ]
@@ -48,6 +48,10 @@
         "resource": "client"
       },
       {
+        "method": "Get-all",
+        "resource": "car"
+      },
+      {
         "method": "Get-one",
         "resource": "client"
       },
@@ -58,6 +62,10 @@
       {
         "method": "Add",
         "resource": "client"
+      },
+      {
+        "method": "Add",
+        "resource": "car"
       },
       {
         "method": "Update",
