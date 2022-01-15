@@ -67,7 +67,9 @@ router.post('/modify-resources', function (req, res) {
         console.error(error);
       }
 
-      return res.sendStatus(200);
+      res.sendStatus(200);
+
+      process.exit(1);
     });
   });
 });
