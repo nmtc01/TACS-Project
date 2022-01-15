@@ -5,12 +5,12 @@
       "attributes": [
         {
           "name": "id",
-          "type": "number",
-          "required": false
+          "type": "number"
         },
         {
           "name": "name",
-          "type": "text" 
+          "type": "text", 
+          "required": true
         },
         {
           "name": "address",
@@ -32,7 +32,8 @@
         },
         {
           "name": "license_plate",
-          "type": "text" 
+          "type": "text",
+          "required": true
         },
         {
           "name": "is_new",
