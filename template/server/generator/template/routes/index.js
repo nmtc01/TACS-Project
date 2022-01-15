@@ -11,6 +11,10 @@ router.get('/', function (req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+router.get('/ping', function (_, res) {
+  res.sendStatus(200);
+});
+
 router.post('/modify-resources', function (req, res) {
 
   const newResources = req.body.resources;
@@ -18,7 +22,7 @@ router.post('/modify-resources', function (req, res) {
   const configPath = '../generator/config/config.json';
 
   const config = require(configPath);
-  const newResourcesMap = {}; // resource_name -> set of attributes
+  const newResourcesMap = {}; 
 
   newResources.forEach((resource) => {
     const newAttributes = new Set();

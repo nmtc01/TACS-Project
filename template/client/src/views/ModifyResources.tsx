@@ -1,7 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import API from '../api/API';
 
 export default function ModifyResources() {
+
+  const history = useHistory();
 
   useEffect(() => {
     const dummyModifiedResources = [
@@ -64,13 +67,30 @@ export default function ModifyResources() {
       }
     ];
 
+    const ping = () => {
+      API.getMethod(() => {
+        history.push('/');
+      },
+        "ping",
+        (_: any) => {
+          setTimeout(() => {
+            ping();
+          }, 500);
+        });
+    }
+
     API.postMethod(
-      (res: any) => { console.log(res) },
+      (res: any) => {
+        console.log(res);
+        setTimeout(() => {
+          ping()
+        }, 1000);
+      },
       'modify-resources',
       {
         resources: dummyModifiedResources
       },
-      (err: any) => { console.error(err) });
+      (err: any) => { console.error(err); });
   })
 
   return (
