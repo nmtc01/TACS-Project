@@ -4,10 +4,8 @@ export default class Attribute {
     constructor(public name: string, public type: type_, public required=true, public references?: string) {}
 
     static deserialize(input: AttributeJSON): Attribute {
-        if (input.references && input.type) {
-            if (input.type != "list")
-                throw new Error("Error in attribute type - not list");
-        }
+        if (input.references && input.type) 
+            throw new Error("Error in attribute - type and references at the same time");
         return new Attribute(input.name, input.type, input.required ? input.required : true, input.references);
     }
 

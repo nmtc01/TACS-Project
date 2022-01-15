@@ -1,4 +1,4 @@
-export type type_ = "text" | "number" | "date" | "bool" | "list";
+export type type_ = "text" | "number" | "date" | "bool";
 
 export type Method = "GET" | "POST" | "PUT" | "DELETE";
 

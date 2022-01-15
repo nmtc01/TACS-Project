@@ -1,4 +1,4 @@
-import { CButton, CCard, CCardHeader, CListGroup, CListGroupItem } from '@coreui/react';
+import { CButton, CCard, CCardHeader, CLink, CListGroup, CListGroupItem } from '@coreui/react';
 import { useEffect, useState } from 'react';
 import API from '../api/API';
 import { Resource } from '../types';
@@ -9,6 +9,7 @@ export default function GetOnePage(resource: Resource) {
     const history = useHistory();
     const [errors, setErrors] = useState(<></>);
     const [element, setElement] = useState(Object);
+    const [elementTypes, setElementTypes] = useState(Object);
     const [hasDeleteBtn, setHasDeleteBtn] = useState(false);
     const [hasUpdateBtn, setHasUpdateBtn] = useState(false);
     const params: any = useParams();
@@ -26,7 +27,21 @@ export default function GetOnePage(resource: Resource) {
     }
 
     useEffect(() => {
+        const getAttributes = async (att: any) => {
+            const types: any = {};
+            if (!att) {
+              console.warn("Missing attributes!");
+              return;
+            }
+            
+            for (let i = 0; i < att.length; i++) {
+                types[att[i].name] = att[i].type ? {"type": att[i].type, "references": false} : {"type": att[i].references, "references": true};
+            }
+            setElementTypes(types);
+        }
+
         API.getMethod(setElement, `${resource.name}/${params.id}`, handleErrors);
+        API.getMethod(getAttributes, 'attributes?resource=' + resource.name, handleErrors);
         API.getMethod(setHasUpdateBtn, 'hasUpdate?resource=' + resource.name, handleErrors);
         API.getMethod(setHasDeleteBtn, 'hasDelete?resource=' + resource.name, handleErrors);
     }, [resource, params.id]);
@@ -37,7 +52,7 @@ export default function GetOnePage(resource: Resource) {
             if (key === "__v") continue;
             list.push(
                 <CListGroupItem key={"attribute-" + key}>
-                    {key}: {element[key]}
+                    {key}: {elementTypes[key] && elementTypes[key]["references"] ? <CLink to={`/${elementTypes[key]["type"]}/${element[key]}`}>{element[key]}</CLink> : element[key]}
                 </CListGroupItem>
             );
         }
@@ -50,7 +65,7 @@ export default function GetOnePage(resource: Resource) {
             history.push(`/${resource.name}`);
         }
     }
-
+    
     return (
         <CCard>
             <CCardHeader>

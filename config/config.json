@@ -56,6 +56,10 @@
         "resource": "client"
       },
       {
+        "method": "Get-one",
+        "resource": "car"
+      },
+      {
         "method": "Delete",
         "resource": "client"
       },

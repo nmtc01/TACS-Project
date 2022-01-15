@@ -90,12 +90,18 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
     <CForm onSubmit={onSubmit}>
       {errors}
       {attributes.length > 0 && attributes.map((item: Attribute & { options: any[] }, index) => {
-        if (!item.type && item.references && item.options)
+        if (!item.type && item.references && item.options && item.options.length > 0)
           return (
             <div key={"field" + index} className="mb-3">
                 <label htmlFor={item.references}>Choose a {item.references}:</label>
                 {item.references && (
-                  <select name={item.references} id={item.references}>
+                  <select
+                    name={item.references}
+                    id={item.references}
+                    onChange={onChange}
+                    defaultValue=""
+                  >
+                    <option key={`option-none`} value="">None</option>
                     {item.options}
                   </select>
                 )}
@@ -149,12 +155,6 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
               <div key={"field" + index} className="mb-3">
                 <CLabel htmlFor={item.name + "Input"}>{item.name}</CLabel>
                 <CInputCheckbox name={item.name} onChange={onCheckboxChange} />
-              </div>
-            );
-          case "list":
-            return (
-              <div key={"field" + index} className="mb-3">
-                Dunno
               </div>
             );
           default:
