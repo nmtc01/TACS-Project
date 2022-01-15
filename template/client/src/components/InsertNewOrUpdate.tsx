@@ -24,7 +24,7 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
       }
       for (let i = 0; i < att.length; i++) {
         if (att[i].references && !att[i].type)
-          API.getAwaitMethod((data: any) => handleOptions(data, att[i]), att[i].references, () => {});
+          API.getAwaitMethod((data: any) => handleOptions(data, att[i]), att[i].references, () => { });
       }
       setAttibutes(att);
     }
@@ -62,7 +62,7 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
     } else if (insertOrUpdate.type === "update") {
       setBody({ ...body, _id: insertOrUpdate._id })
       API.putMethod(
-        (success: boolean) => { if(success) history.push(`/${insertOrUpdate.resource.name}/${insertOrUpdate._id}`) },
+        (success: boolean) => { if (success) history.push(`/${insertOrUpdate.resource.name}/${insertOrUpdate._id}`) },
         insertOrUpdate.resource.name,
         body,
         () => { })
@@ -76,12 +76,12 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
         if (!item.type && item.references && item.options)
           return (
             <div key={"field" + index} className="mb-3">
-                <label htmlFor={item.references}>Choose a {item.references}:</label>
-                {item.references && (
-                  <select name={item.references} id={item.references}>
-                    {item.options}
-                  </select>
-                )}
+              <label htmlFor={item.references}>Choose a {item.references}:</label>
+              {item.references && (
+                <select name={item.references} id={item.references}>
+                  {item.options}
+                </select>
+              )}
             </div>
           );
         else switch (item.type) {
