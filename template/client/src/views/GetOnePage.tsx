@@ -27,8 +27,8 @@ export default function GetOnePage(resource: Resource) {
 
     useEffect(() => {
         API.getMethod(setElement, `${resource.name}/${params.id}`, handleErrors);
-        API.getMethod(setHasUpdateBtn, `${resource.name}/hasUpdate`, handleErrors);
-        API.getMethod(setHasDeleteBtn, `${resource.name}/hasDelete`, handleErrors);
+        API.getMethod(setHasUpdateBtn, 'hasUpdate?resource=' + resource.name, handleErrors);
+        API.getMethod(setHasDeleteBtn, 'hasDelete?resource=' + resource.name, handleErrors);
     }, [resource, params.id]);
 
     const iterateElement = () => {

@@ -13,7 +13,6 @@ import { Resource } from '../types';
 export default function HomePage(resource: Resource) {
     const history = useHistory();
     const [errors, setErrors] = useState(<></>);
-    const [config, setConfig] = useState(Object);
     const [resources, setResources] = useState([]);
     const [hasGetAllsBtn, setHasGetAllsBtn] = useState([]);
     
@@ -39,26 +38,13 @@ export default function HomePage(resource: Resource) {
         }
 
         API.getMethod(getResources, 'resources', handleErrors);
-        API.getMethod(setConfig, 'config', handleErrors);
     }, []);
 
     useEffect(() => {
-        if (!config || !config.website)
-            return;
-        const pages = config.website.pages;
-        if (!pages)
-            return;
-        
         resources.forEach((item) => {
-            for (let i = 0; i < pages.length; i++) {
-                if (pages[i].resource === item && pages[i].method === "Get-all") {
-                    setHasGetAllsBtn((old) => [...old, true] as never[]);
-                    break;
-                }
-                if (i === pages.length - 1) setHasGetAllsBtn((old) => [...old, false] as never[]);
-            }
+            API.getMethod((data: boolean) => setHasGetAllsBtn((old) => [...old, data] as never[]), 'hasGetall?resource=' + item, handleErrors);
         })
-    }, [resources, config]);
+    }, [resources]);
 
     return (
         <CContainer>

@@ -6,25 +6,42 @@ import { useHistory } from 'react-router-dom';
 
 export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
   const history = useHistory();
+  const [errors, setErrors] = useState(<></>);
   const [body, setBody] = useState(Object);
   const [attributes, setAttibutes] = useState<(Attribute & { options: any[] })[]>([]);
+
+  const handleErrors = (err: any) => {
+    setErrors(
+        <div className="alert alert-danger">
+            <ul className="my-0">
+            {err.response.data.errors.map((err: any) => (
+                <li key={err.message}>{err.message}</li>
+            ))}
+            </ul>
+        </div>
+    );
+  }
 
   useEffect(() => {
     const handleOptions = async (data: any[], att: any) => {
       att.options = [];
       data.forEach((option, index) => {
         att.options.push(<option key={`option-${index}`} value={option._id}>{option._id}</option>);
-      })
+      });
     }
 
-    const getAttributes = (att: any) => {
+    const getAttributes = async (att: any) => {
       if (!att) {
         console.warn("Missing attributes!");
         return;
       }
+      
       for (let i = 0; i < att.length; i++) {
         if (att[i].references && !att[i].type)
-          API.getAwaitMethod((data: any) => handleOptions(data, att[i]), att[i].references, () => {});
+          await API.getAwaitMethod(async (data: boolean) => {
+            if (data)
+              await API.getAwaitMethod((options: any) => handleOptions(options, att[i]), att[i].references, handleErrors);
+          }, 'hasGetall?resource=' + att[i].references, handleErrors);
       }
       setAttibutes(att);
     }
@@ -33,9 +50,9 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
       setBody(val);
     }
 
-    API.getMethod(getAttributes, 'attributes?resource=' + insertOrUpdate.resource.name, () => { });
+    API.getMethod(getAttributes, 'attributes?resource=' + insertOrUpdate.resource.name, handleErrors);
     if (insertOrUpdate.type === "update") {
-      API.getMethod(getValues, insertOrUpdate.resource.name + '/' + insertOrUpdate._id, () => { })
+      API.getMethod(getValues, insertOrUpdate.resource.name + '/' + insertOrUpdate._id, handleErrors)
     }
   }, [insertOrUpdate.resource.name, insertOrUpdate.type, insertOrUpdate._id]);
 
@@ -58,21 +75,21 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
         (newId: string) => { history.push(`/${insertOrUpdate.resource.name}/${newId}`) },
         insertOrUpdate.resource.name,
         body,
-        () => { })
+        handleErrors)
     } else if (insertOrUpdate.type === "update") {
       setBody({ ...body, _id: insertOrUpdate._id })
       API.putMethod(
         (success: boolean) => { if(success) history.push(`/${insertOrUpdate.resource.name}/${insertOrUpdate._id}`) },
         insertOrUpdate.resource.name,
         body,
-        () => { })
+        handleErrors)
     }
   }
 
   return (
     <CForm onSubmit={onSubmit}>
+      {errors}
       {attributes.length > 0 && attributes.map((item: Attribute & { options: any[] }, index) => {
-        console.log(item);
         if (!item.type && item.references && item.options)
           return (
             <div key={"field" + index} className="mb-3">

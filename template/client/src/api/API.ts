@@ -32,8 +32,8 @@ export default class API {
     static async getAwaitMethod(action: Function, path: string, errorAction: Function) {
         await axios
             .get(API.buildURL(path))
-            .then((res) => {
-                action(res.data);
+            .then(async (res) => {
+                await action(res.data);
             })
             .catch((err) => {
                 errorAction(err);

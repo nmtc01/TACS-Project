@@ -25,8 +25,8 @@ export default function GetAllPage(resource: Resource) {
         }
 
         API.getMethod(setResourcesList, resource.name, handleErrors);
-        API.getMethod(setHasGetOneBtn, `${resource.name}/hasGetOne`, handleErrors);
-        API.getMethod(setHasAddBtn, `${resource.name}/hasAdd`, handleErrors);
+        API.getMethod(setHasGetOneBtn, 'hasGetone?resource=' + resource.name, handleErrors);
+        API.getMethod(setHasAddBtn, 'hasAdd?resource=' + resource.name, handleErrors);
     }, [resource.name]);
 
     const fields = [
