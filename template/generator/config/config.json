@@ -1,0 +1,76 @@
+{
+  "resources": [
+    {
+      "name": "client",
+      "attributes": [
+        {
+          "name": "id",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "name",
+          "type": "text" 
+        },
+        {
+          "name": "address",
+          "type": "text" 
+        },
+        {
+          "name": "car",
+          "references": "car"
+        }
+      ]
+    },
+    {
+      "name": "car",
+      "attributes": [
+        {
+          "name": "id",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "license_plate",
+          "type": "text" 
+        },
+        {
+          "name": "is_new",
+          "type": "bool" 
+        }
+      ]
+    }
+  ],
+  "website": {
+    "pages": [
+      {
+        "method": "Get-all",
+        "resource": "client"
+      },
+      {
+        "method": "Get-all",
+        "resource": "car"
+      },
+      {
+        "method": "Get-one",
+        "resource": "client"
+      },
+      {
+        "method": "Delete",
+        "resource": "client"
+      },
+      {
+        "method": "Add",
+        "resource": "client"
+      },
+      {
+        "method": "Add",
+        "resource": "car"
+      },
+      {
+        "method": "Update",
+        "resource": "client"
+      }
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+methodsAllowed = [
+  "Get-one <resource>", /<resource/:id
+  "Delete <resource>", /<resource/:id
+  "Get-all <resource>", /<resource>s/
+  "Add <resource>",
+  "Update <resource>",
+]
