@@ -25,15 +25,12 @@ export default class Generator {
     }
 
     copyTemplate() {
-        const sourceDirectory = `template`;
-
         try {
-            fse.copySync(sourceDirectory, this.folderPath);
+            fse.copySync('template', this.folderPath);
+            fse.copySync('config', `${this.folderPath}/server/generator/config`);
         } catch (error) {
             console.error(error);
         }
-
-        // TODO: copiar ficheiro de configuração
     }
 
     generateCode() {

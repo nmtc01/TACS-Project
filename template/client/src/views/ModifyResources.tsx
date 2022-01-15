@@ -13,24 +13,20 @@ export default function ModifyResources() {
         "attributes": [
           {
             "name": "id",
-            "type": "number",
-            "required": false
+            "type": "number"
           },
           {
             "name": "name",
-            "type": "text"
+            "type": "text", 
+            "required": true
           },
           {
             "name": "address",
-            "type": "text"
+            "type": "text" 
           },
           {
             "name": "car",
             "references": "car"
-          },
-          {
-            "name": "age",
-            "type": "number"
           }
         ]
       },
@@ -44,11 +40,16 @@ export default function ModifyResources() {
           },
           {
             "name": "license_plate",
-            "type": "text"
+            "type": "text",
+            "required": true
           },
           {
             "name": "is_new",
-            "type": "bool"
+            "type": "bool" 
+          },
+          {
+            "name": "is_old",
+            "type": "bool" 
           }
         ]
       },

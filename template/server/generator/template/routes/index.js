@@ -77,3 +77,42 @@ router.post('/modify-resources', function (req, res) {
     });
   });
 });
+
+router.post('/modify-pages', function (req, res) {
+
+  const newPages = req.body.pages;
+
+  const configPath = '../generator/config/config.json';
+
+  const config = require(configPath);
+
+  // Replace old pages
+  config.website.pages = newPages;
+  fs.writeFile('generator/config/config.json', JSON.stringify(config), (err) => {
+    if (err) {
+      console.error(err);
+      return res.sendStatus(500);
+    }
+
+    exec('cd generator && npm start', (error, stdout, stderr) => {
+      if (error) {
+        console.error(`exec error: ${error}`);
+        return res.sendStatus(500);
+      }
+      console.log(`stdout: ${stdout}`);
+      console.error(`stderr: ${stderr}`);
+
+      // Move the new generated files into the server directory
+      try {
+        fse.copySync('generator/output/routes', 'routes');
+        fse.copySync('generator/output/app.js', 'app.js');
+      } catch (error) {
+        console.error(error);
+      }
+
+      res.sendStatus(200);
+
+      process.exit(1);
+    });
+  });
+});

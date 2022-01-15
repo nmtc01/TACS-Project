@@ -16,8 +16,7 @@ export default function generateModel(table: Table): string {
 const ObjectId = mongoose.Schema.Types.ObjectId; 
     
 const ${tableNameLC}Schema = new mongoose.Schema({
-    ${generateSchemaAttributes(table)
-        }
+    ${generateSchemaAttributes(table)}
 });
 
 const ${tableNameUC} = mongoose.model('${tableNameUC}', ${tableNameLC}Schema);
@@ -32,10 +31,11 @@ function generateSchemaAttributes(table: Table): string {
         if (generatedCode) {
             generatedCode += ',\n\t'
         }
+        const requireCode = `required: ${attribute.required}`;
         if (attribute.type && !attribute.references)
-            generatedCode += `'${attribute.name}': { type: ${generateAttributeType(attribute.type)} }`;
+            generatedCode += `'${attribute.name}': { type: ${generateAttributeType(attribute.type)}, ${requireCode} }`;
         else if (!attribute.type && attribute.references)
-            generatedCode += `'${attribute.name}': { type: ObjectId, ref: "${attribute.references.charAt(0).toUpperCase() + attribute.references.slice(1)}" }`;
+            generatedCode += `'${attribute.name}': { type: ObjectId, ref: "${attribute.references.charAt(0).toUpperCase() + attribute.references.slice(1)}", ${requireCode} }`;
         else
             throw new Error('Either a type or a references property must be declared!');
     });
