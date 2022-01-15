@@ -32,6 +32,8 @@ export default class Generator {
         } catch (error) {
             console.error(error);
         }
+
+        // TODO: copiar ficheiro de configuração
     }
 
     generateCode() {
@@ -40,12 +42,12 @@ export default class Generator {
     }
 
     generateModels() {
+        fs.mkdir(`${this.folderPath}/server/models`, { recursive: true }, (err: string) => {
+            if (err) throw err;
+        });
+
         for (let tableName in this.database.tables) {
             const generatedCode = generateModel(this.database.tables[tableName]);
-
-            fs.mkdir(`${this.folderPath}/server/models`, { recursive: true }, (err: string) => {
-                if (err) throw err;
-            });
 
             fs.writeFile(`${this.folderPath}/server/models/${tableName}.js`, generatedCode, (err: string) => {
                 if (err) {
