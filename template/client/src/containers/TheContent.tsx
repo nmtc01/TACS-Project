@@ -21,6 +21,8 @@ const GetAllPage = React.lazy(() => import('../views/GetAllPage'));
 const InsertNewPage = React.lazy(() => import('../views/InsertNewPage'));
 const UpdatePage = React.lazy(() => import('../views/UpdatePage'));
 const GetOnePage = React.lazy(() => import('../views/GetOnePage'));
+const ModifyResources = React.lazy(() => import('../views/ModifyResources'));
+const ModifyPages = React.lazy(() => import('../views/ModifyPages'));
 
 function addRoutes(pages: Operation[]) {
   const routes: RouteType[] = [];
@@ -71,8 +73,20 @@ const TheContent = () => {
       path: '/',
       exact: true,
       name: 'Resources',
-      component: HomePage,
+      component: HomePage
     },
+    {
+      path: '/modify-resources',
+      exact: true,
+      name: 'ModifyResources',
+      component: ModifyResources
+    },
+    {
+      path: '/modify-pages',
+      exact: true,
+      name: 'ModifyPages',
+      component: ModifyPages
+    }
   ]);
 
   useEffect(() => {

@@ -5,12 +5,12 @@
       "attributes": [
         {
           "name": "id",
-          "type": "number"
+          "type": "number",
+          "required": false
         },
         {
           "name": "name",
-          "type": "text", 
-          "required": true
+          "type": "text" 
         },
         {
           "name": "address",
@@ -32,8 +32,7 @@
         },
         {
           "name": "license_plate",
-          "type": "text",
-          "required": true
+          "type": "text" 
         },
         {
           "name": "is_new",
@@ -55,10 +54,6 @@
       {
         "method": "Get-one",
         "resource": "client"
-      },
-      {
-        "method": "Get-one",
-        "resource": "car"
       },
       {
         "method": "Delete",

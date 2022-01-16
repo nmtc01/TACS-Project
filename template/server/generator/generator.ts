@@ -3,7 +3,7 @@ const fse = require('fs-extra');
 import Database from './model/database/database';
 import Backend from './model/backend/backend';
 import generateModel from './generation/model';
-import generateRoutes, { generateAttributesRoute, generateConfigRoute, generateResourcesRoute, generateHasRoutes } from './generation/routes';
+import generateRoutes, { generateAttributesRoute, generateConfigRoute, generateResourcesRoute } from './generation/routes';
 import Route from './model/backend/route';
 import { toLower } from './utils/utils';
 
@@ -11,7 +11,7 @@ export default class Generator {
     private folderPath: string;
 
     constructor(private database: Database, private backend: Backend) {
-        this.folderPath = this.createFolderPath();
+        this.folderPath = 'output';
         database.print();
         backend.print();
 
@@ -19,15 +19,11 @@ export default class Generator {
         this.generateCode();
     }
 
-    createFolderPath() {
-        const timestamp = new Date().toLocaleString().replace(/\//g, '-').replace(':', 'h').replace(':', 'm');
-        return `output/${timestamp}`;
-    }
-
     copyTemplate() {
+        const sourceDirectory = `template`;
+
         try {
-            fse.copySync('template', this.folderPath);
-            fse.copySync('config', `${this.folderPath}/server/generator/config`);
+            fse.copySync(sourceDirectory, this.folderPath);
         } catch (error) {
             console.error(error);
         }
@@ -39,14 +35,15 @@ export default class Generator {
     }
 
     generateModels() {
-        fs.mkdir(`${this.folderPath}/server/models`, { recursive: true }, (err: string) => {
+
+        fs.mkdir(`${this.folderPath}/models`, { recursive: true }, (err: string) => {
             if (err) throw err;
         });
 
         for (let tableName in this.database.tables) {
             const generatedCode = generateModel(this.database.tables[tableName]);
 
-            fs.writeFile(`${this.folderPath}/server/models/${tableName}.js`, generatedCode, (err: string) => {
+            fs.writeFile(`${this.folderPath}/models/${tableName}.js`, generatedCode, (err: string) => {
                 if (err) {
                     console.error(err)
                     return;
@@ -77,10 +74,9 @@ export default class Generator {
         const configCode = generateConfigRoute();
         const resourcesCode = generateResourcesRoute();
         const attributesCode = generateAttributesRoute();
-        const hasMethodRouteCode = generateHasRoutes();
 
-        indexRoutes = configCode + resourcesCode + attributesCode + hasMethodRouteCode;
-        fs.appendFile(`${this.folderPath}/server/routes/index.js`, indexRoutes, function (err: string) {
+        indexRoutes = configCode + resourcesCode + attributesCode;
+        fs.appendFile(`${this.folderPath}/routes/index.js`, indexRoutes, function (err: string) {
             if (err) {
                 console.error(err)
                 return;
@@ -91,7 +87,7 @@ export default class Generator {
 
             const generatedCode = generateRoutes(routeGroups[resource]);
 
-            fs.writeFile(`${this.folderPath}/server/routes/${resource}.js`, generatedCode, (err: string) => {
+            fs.writeFile(`${this.folderPath}/routes/${resource}.js`, generatedCode, (err: string) => {
                 if (err) {
                     console.error(err)
                     return;
@@ -104,7 +100,7 @@ export default class Generator {
             routeUses.push(`app.use('/${resourceName}', ${resourceName}Router);`)
         }
 
-        const appJsPath = `${this.folderPath}/server/app.js`
+        const appJsPath = `${this.folderPath}/app.js`
 
         let fileData = fs.readFileSync(appJsPath).toString();
         fileData = fileData.replace(/\/\/ROUTE_IMPORTS/g, routeImports.join('\n'));

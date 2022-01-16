@@ -51,6 +51,8 @@ function generateAttributeType(type: type_) {
             return "String";
         case "bool":
             return "Boolean";
+        case "list":
+            return "Array";
         case "date":
             return "Date";
     }

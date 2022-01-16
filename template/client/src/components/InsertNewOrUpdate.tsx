@@ -79,7 +79,7 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
     } else if (insertOrUpdate.type === "update") {
       setBody({ ...body, _id: insertOrUpdate._id })
       API.putMethod(
-        (success: boolean) => { if(success) history.push(`/${insertOrUpdate.resource.name}/${insertOrUpdate._id}`) },
+        (success: boolean) => { if (success) history.push(`/${insertOrUpdate.resource.name}/${insertOrUpdate._id}`) },
         insertOrUpdate.resource.name,
         body,
         handleErrors)

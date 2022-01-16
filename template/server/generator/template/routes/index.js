@@ -22,7 +22,7 @@ router.post('/modify-resources', function (req, res) {
   const configPath = '../generator/config/config.json';
 
   const config = require(configPath);
-  const newResourcesMap = {};
+  const newResourcesMap = {}; 
 
   newResources.forEach((resource) => {
     const newAttributes = new Set();
