@@ -3,7 +3,7 @@ const fse = require('fs-extra');
 import Database from './model/database/database';
 import Backend from './model/backend/backend';
 import generateModel from './generation/model';
-import generateRoutes, { generateAttributesRoute, generateConfigRoute, generateResourcesRoute } from './generation/routes';
+import generateRoutes, { generateAttributesRoute, generateConfigRoute, generateResourcesRoute, generateHasRoutes } from './generation/routes';
 import Route from './model/backend/route';
 import { toLower } from './utils/utils';
 
@@ -74,8 +74,9 @@ export default class Generator {
         const configCode = generateConfigRoute();
         const resourcesCode = generateResourcesRoute();
         const attributesCode = generateAttributesRoute();
+        const hasMethodRouteCode = generateHasRoutes();
 
-        indexRoutes = configCode + resourcesCode + attributesCode;
+        indexRoutes = configCode + resourcesCode + attributesCode + hasMethodRouteCode;
         fs.appendFile(`${this.folderPath}/routes/index.js`, indexRoutes, function (err: string) {
             if (err) {
                 console.error(err)

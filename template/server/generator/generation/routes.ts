@@ -14,14 +14,6 @@ export default function generateRoutes(routes: Array<Route>): string {
     const resourceName = routes[0].resource;
     code += generateRoutesHeader(resourceName);
     code += "\n";
-    code += generateHasGetOneRoute(resourceName);
-    code += "\n";
-    code += generateHasAddRoute(resourceName);
-    code += "\n";
-    code += generateHasUpdateRoute(resourceName);
-    code += "\n";
-    code += generateHasDeleteRoute(resourceName);
-    code += "\n";
 
     routes.forEach((route) => {
         switch (route.method) {
@@ -192,45 +184,61 @@ router.get('/attributes', function (req, res, next) {
 `;
 }
 
-function generateHasMethodRoute(resource: string, method: MethodType): string {
+function generateHasMethodRoute(method: MethodType): string {
+    
+    const methodArray = method.split("-");
+    const endpoint = `/has${methodArray.join("")}`;
+
+    return `
+router.get('${endpoint}', async function (req, res, next) {
+    res.header("Cache-Control", "no-cache, no-store, must-revalidate");
+    res.header("Pragma", "no-cache");
+    res.header("Expires", 0);
+
+    let config = JSON.parse('${JSON.stringify(config)}');
+    let resource = req.query.resource;
+
     const pages = config.website.pages;
     let hasMethod = false;
     if (pages) {
         for(let i = 0; i < pages.length; i++) {
-            if (pages[i].resource === resource && pages[i].method === method) {
+            if (pages[i].resource === resource && pages[i].method === "${method}") {
                 hasMethod = true;
                 break;
             }
         }
     }
 
-    const methodArray = method.split("-");
-    methodArray.map((item) => {
-        return item.charAt(0).toUpperCase() + item.slice(1);
-    });
-    const endpoint = `/has${methodArray.join("")}`;
-    return `
-router.get('${endpoint}', async function (req, res, next) {
-  res.header("Cache-Control", "no-cache, no-store, must-revalidate");
-  res.header("Pragma", "no-cache");
-  res.header("Expires", 0);  
-  res.send(${hasMethod});
+    res.send(hasMethod);
 }); 
 `;  
 }
 
-function generateHasGetOneRoute(resource: string): string {
-    return generateHasMethodRoute(resource, "Get-one");
+function generateHasGetAllRoute(): string {
+    return generateHasMethodRoute("Get-all");
 }
 
-function generateHasAddRoute(resource: string): string {
-    return generateHasMethodRoute(resource, "Add");
+function generateHasGetOneRoute(): string {
+    return generateHasMethodRoute("Get-one");
 }
 
-function generateHasUpdateRoute(resource: string): string {
-    return generateHasMethodRoute(resource, "Update");
+function generateHasAddRoute(): string {
+    return generateHasMethodRoute("Add");
 }
 
-function generateHasDeleteRoute(resource: string): string {
-    return generateHasMethodRoute(resource, "Delete");
+function generateHasUpdateRoute(): string {
+    return generateHasMethodRoute("Update");
+}
+
+function generateHasDeleteRoute(): string {
+    return generateHasMethodRoute("Delete");
+}
+
+export function generateHasRoutes(): string {
+    let code = generateHasGetAllRoute() + '\n';
+    code += generateHasGetOneRoute() + '\n';
+    code += generateHasAddRoute() + '\n';
+    code += generateHasUpdateRoute() + '\n';
+    code += generateHasDeleteRoute() + '\n';
+    return code;
 }
