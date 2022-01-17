@@ -48,13 +48,13 @@ export default function ModifyPages() {
   }
 
   const addPage = () => {
-    modifyPages((old: Operation[]) => [...old, {resource: resources.length > 0 ? resources[0] : "", method: "Get-all"}]);
+    modifyPages((old: Operation[]) => [...old, { resource: resources.length > 0 ? resources[0] : "", method: "Get-all" }]);
   }
 
   const deletePage = (index: number) => {
     modifyPages((old: Operation[]) => [...old.slice(0, index), ...old.slice(index + 1)]);
   }
-  
+
   const ping = () => {
     API.getMethod(() => {
       window.location.reload();
@@ -98,30 +98,34 @@ export default function ModifyPages() {
                     <CRow>
                       <CCol>
                         <CLabel htmlFor={"resource"}>Resource</CLabel>
-                        <select
-                          name={"resource"}
-                          id={"resource"}
-                          onChange={(event) => onChange(event, index)}
-                        >
-                          {resources.map((resource) =>
-                            <option key={`option-${resource}`} value={resource} selected={page.resource === resource}>{resource}</option>
-                          )}
-                        </select>
+                        <div>
+                          <select
+                            name={"resource"}
+                            id={"resource"}
+                            onChange={(event) => onChange(event, index)}
+                          >
+                            {resources.map((resource) =>
+                              <option key={`option-${resource}`} value={resource} selected={page.resource === resource}>{resource}</option>
+                            )}
+                          </select>
+                        </div>
                       </CCol>
                       <CCol>
                         <CLabel htmlFor={"method"}>Method</CLabel>
-                        <select
-                          name={"method"}
-                          id={"method"}
-                          onChange={(event) => onChange(event, index)}
-                          defaultValue={page.method}
-                        >
-                          <option key={`option-Get-all`} value="Get-all">Get-all</option>
-                          <option key={`option-Get-one`} value="Get-one">Get-one</option>
-                          <option key={`option-Add`} value="Add">Add</option>
-                          <option key={`option-Update`} value="Update">Update</option>
-                          <option key={`option-Delete`} value="Delete">Delete</option>
-                        </select>
+                        <div>
+                          <select
+                            name={"method"}
+                            id={"method"}
+                            onChange={(event) => onChange(event, index)}
+                            defaultValue={page.method}
+                          >
+                            <option key={`option-Get-all`} value="Get-all">Get-all</option>
+                            <option key={`option-Get-one`} value="Get-one">Get-one</option>
+                            <option key={`option-Add`} value="Add">Add</option>
+                            <option key={`option-Update`} value="Update">Update</option>
+                            <option key={`option-Delete`} value="Delete">Delete</option>
+                          </select>
+                        </div>
                       </CCol>
                       <CCol>
                         <CButton onClick={() => deletePage(index)}>
@@ -132,7 +136,7 @@ export default function ModifyPages() {
                   </CListGroupItem>
                 )}
               </CListGroup>
-              <CButton color="primary" style={{borderRadius: "50%"}} onClick={addPage}>
+              <CButton color="primary" style={{ borderRadius: "50%" }} onClick={addPage}>
                 +
               </CButton>
               <CButton type='submit'>

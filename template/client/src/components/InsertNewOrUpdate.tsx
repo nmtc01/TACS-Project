@@ -12,13 +12,13 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
 
   const handleErrors = (err: any) => {
     setErrors(
-        <div className="alert alert-danger">
-            <ul className="my-0">
-            {err.response.data.errors.map((err: any) => (
-                <li key={err.message}>{err.message}</li>
-            ))}
-            </ul>
-        </div>
+      <div className="alert alert-danger">
+        <ul className="my-0">
+          {err.response.data.errors.map((err: any) => (
+            <li key={err.message}>{err.message}</li>
+          ))}
+        </ul>
+      </div>
     );
   }
 
@@ -35,7 +35,7 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
         console.warn("Missing attributes!");
         return;
       }
-      
+
       for (let i = 0; i < att.length; i++) {
         if (att[i].references && !att[i].type)
           await API.getAwaitMethod(async (data: boolean) => {
@@ -59,7 +59,8 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
   const onChange = (event: any) => {
     const name = event.target.name;
     const value = event.target.value;
-    setBody((values: Object) => ({ ...values, [name]: value }))
+    setBody((values: Object) => ({ ...values, [name]: value }));
+    console.log(body)
   }
 
   const onChangeYesNo = (event: any) => {
@@ -93,18 +94,20 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
         if (!item.type && item.references && item.options && item.options.length > 0)
           return (
             <div key={"field" + index} className="mb-3">
-                <label htmlFor={item.references}>Choose a {item.references}:</label>
-                {item.references && (
+              <label htmlFor={item.name}>Choose a {item.name}:</label>
+              {item.references && (
+                <div>
                   <select
-                    name={item.references}
-                    id={item.references}
+                    name={item.name}
+                    id={item.name}
                     onChange={onChange}
                     defaultValue=""
                   >
                     <option key={`option-none`} value="">None</option>
                     {item.options}
                   </select>
-                )}
+                </div>
+              )}
             </div>
           );
         else switch (item.type) {
@@ -118,7 +121,7 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
                   name={item.name}
                   onChange={onChange}
                   required={(item.required !== undefined) ? item.required : false}
-                  placeholder={(insertOrUpdate.type === "update") ? body[item.name] : ""}
+                  defaultValue={(insertOrUpdate.type === "update") ? body[item.name] : ""}
                 />
               </div>
             );
@@ -132,7 +135,7 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
                   name={item.name}
                   onChange={onChange}
                   required={(item.required !== undefined) ? item.required : false}
-                  placeholder={(insertOrUpdate.type === "update") ? body[item.name] : ""}
+                  defaultValue={(insertOrUpdate.type === "update") ? body[item.name] : ""}
                 />
               </div>
             );
@@ -146,7 +149,7 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
                   name={item.name}
                   onChange={onChange}
                   required={(item.required !== undefined) ? item.required : false}
-                  placeholder={(insertOrUpdate.type === "update") ? body[item.name] : ""}
+                  defaultValue={(insertOrUpdate.type === "update") ? body[item.name] : ""}
                 />
               </div>
             );
@@ -154,13 +157,13 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
             return (
               <div key={"field" + index} className="mb-3">
                 <CLabel htmlFor={item.name + "Input"}>{item.name}</CLabel>
-                <div style={{marginLeft: "1rem"}}>
+                <div style={{ marginLeft: "1rem" }}>
                   <CLabel htmlFor={"Yes"}>Yes</CLabel>
-                  <CInputRadio id="Yes" value="true" name={item.name} onChange={onChangeYesNo} required={(item.required !== undefined) ? item.required : false} style={{marginLeft: "1rem"}} />
+                  <CInputRadio id="Yes" value="true" name={item.name} onChange={onChangeYesNo} required={(item.required !== undefined) ? item.required : false} style={{ marginLeft: "1rem" }} />
                 </div>
-                <div style={{marginLeft: "1rem"}}>
+                <div style={{ marginLeft: "1rem" }}>
                   <CLabel htmlFor={"No"}>No</CLabel>
-                  <CInputRadio id="No" value="false" name={item.name} onChange={onChangeYesNo} style={{marginLeft: "1rem"}} />
+                  <CInputRadio id="No" value="false" name={item.name} onChange={onChangeYesNo} style={{ marginLeft: "1rem" }} />
                 </div>
               </div>
             );

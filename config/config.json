@@ -4,21 +4,39 @@
       "name": "client",
       "attributes": [
         {
-          "name": "id",
+          "name": "name",
+          "type": "text", 
+          "required": true
+        },
+        {
+          "name": "nif",
           "type": "number"
         },
+        {
+          "name": "birth_date",
+          "type": "date"
+        },
+        {
+          "name": "address",
+          "type": "text" 
+        }
+      ]
+    },
+    {
+      "name": "employee",
+      "attributes": [
         {
           "name": "name",
           "type": "text", 
           "required": true
         },
         {
-          "name": "address",
-          "type": "text" 
+          "name": "birth_date",
+          "type": "date"
         },
         {
-          "name": "car",
-          "references": "car"
+          "name": "join_date",
+          "type": "date" 
         }
       ]
     },
@@ -26,9 +44,14 @@
       "name": "car",
       "attributes": [
         {
-          "name": "id",
-          "type": "number",
-          "required": false
+          "name": "brand",
+          "type": "text", 
+          "required": true
+        },
+        {
+          "name": "model",
+          "type": "text", 
+          "required": true
         },
         {
           "name": "license_plate",
@@ -37,12 +60,30 @@
         },
         {
           "name": "is_new",
-          "type": "bool",
-          "required": true 
+          "type": "bool" 
+        }
+      ]
+    },
+    {
+      "name": "sale",
+      "attributes": [
+        {
+          "name": "car",
+          "references": "car",
+          "required": true
         },
         {
-          "name": "is_blue",
-          "type": "bool" 
+          "name": "client",
+          "references": "client",
+          "required": true
+        },
+        {
+          "name": "seller",
+          "references": "employee"
+        },
+        {
+          "name": "value",
+          "type": "number"
         }
       ]
     }
@@ -56,6 +97,46 @@
       {
         "method": "Get-all",
         "resource": "car"
+      },
+      {
+        "method": "Get-all",
+        "resource": "employee"
+      },
+      {
+        "method": "Get-all",
+        "resource": "sale"
+      },
+      {
+        "method": "Get-one",
+        "resource": "client"
+      },
+      {
+        "method": "Get-one",
+        "resource": "sale"
+      },
+      {
+        "method": "Delete",
+        "resource": "client"
+      },
+      {
+        "method": "Add",
+        "resource": "client"
+      },
+      {
+        "method": "Add",
+        "resource": "employee"
+      },
+      {
+        "method": "Add",
+        "resource": "car"
+      },
+      {
+        "method": "Add",
+        "resource": "sale"
+      },
+      {
+        "method": "Update",
+        "resource": "client"
       }
     ]
   }

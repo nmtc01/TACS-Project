@@ -47,6 +47,7 @@ export default function GetOnePage(resource: Resource) {
     }, [resource, params.id]);
 
     const iterateElement = () => {
+        console.log(elementTypes)
         let list = [];
         for (let key in element) {
             if (key === "__v") continue;
@@ -54,7 +55,9 @@ export default function GetOnePage(resource: Resource) {
             let elem;
             if (element[key] === true) elem = "true";
             else if (element[key] === false) elem = "false";
+            else if (elementTypes[key] && elementTypes[key].type === 'date') elem = new Date(element[key]).toLocaleDateString("en-US")
             else elem = element[key];
+
             list.push(
                 <CListGroupItem key={"attribute-" + key}>
                     {key}: {elementTypes[key] && elementTypes[key]["references"] ? <CLink to={`/${elementTypes[key]["type"]}/${elem}`}>{elem}</CLink> : elem}
