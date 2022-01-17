@@ -1,5 +1,6 @@
 import { CButton, CCard, CForm, CListGroup, CListGroupItem, CCol, CRow, CLabel, CSpinner } from '@coreui/react';
 import { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import API from '../api/API';
 import { Operation, MethodType } from '../types';
 
@@ -7,6 +8,8 @@ export default function ModifyPages() {
   const [pages, modifyPages] = useState<Operation[]>([]);
   const [resources, modifyResources] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+
+  const history = useHistory();
 
   useEffect(() => {
     const setConfig = (config: any) => {
@@ -57,6 +60,7 @@ export default function ModifyPages() {
 
   const ping = () => {
     API.getMethod(() => {
+      history.push('/');
       window.location.reload();
     },
       "ping",
@@ -86,9 +90,6 @@ export default function ModifyPages() {
   return (
     <div>
       <CCard>
-        {loading && (
-          <CSpinner color='primary' />
-        )}
         <CForm onSubmit={handleSubmit}>
           {pages && resources && (
             <>
@@ -136,14 +137,22 @@ export default function ModifyPages() {
                   </CListGroupItem>
                 )}
               </CListGroup>
-              <CButton color="primary" style={{ borderRadius: "50%" }} onClick={addPage}>
-                +
-              </CButton>
-              <CButton type='submit'>
-                Save
-              </CButton>
+              <div className="mb-3 mt-3 ml-2">
+                <CButton color="secondary" onClick={addPage}>
+                  + Add page
+                </CButton>
+              </div>
+              <div className="ml-2 mb-2">
+                <CButton className="mr-2" type='submit' color="primary">
+                  Save
+                </CButton>
+                {loading && (
+                  <CSpinner color='primary' />
+                )}
+              </div>
             </>
           )}
+
         </CForm>
       </CCard>
     </div>

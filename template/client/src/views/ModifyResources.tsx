@@ -12,7 +12,6 @@ export default function ModifyResources() {
 
   useEffect(() => {
     const getConfig = async (config: any) => {
-      console.log(config.resources)
       if (!config.resources) {
         console.warn("Missing attributes!");
         return;
@@ -59,8 +58,6 @@ export default function ModifyResources() {
       return;
     currentResources.push({ 'name': '', attributes: [] })
     modifyResources({ 'resources': currentResources });
-
-    console.log(resources)
   }
 
   const addAttribute = (resourceIndex: number) => {
@@ -72,7 +69,6 @@ export default function ModifyResources() {
       "name": ""
     })
     modifyResources({ 'resources': currentResources });
-    console.log(resources)
   }
 
 
@@ -114,16 +110,11 @@ export default function ModifyResources() {
     }
 
     modifyResources({ 'resources': currentResources });
-    console.log(currentResources);
-    console.log(resources);
   }
 
   return (
     <>
       <CCard style={{ padding: "1rem" }}>
-        {loading && (
-          <CSpinner color='primary' />
-        )}
         <CForm onSubmit={onSubmit}>
           {resources?.resources && resources.resources.map((resource, resindex) => <CCard key={`resource-${resindex}`} style={{ padding: "1rem", backgroundColor: '#eeeeee' }}>
             <CLabel htmlFor={`resourceName-${resindex}`}>Resource Name</CLabel>
@@ -214,15 +205,21 @@ export default function ModifyResources() {
             >Add Attribute</CButton>
           </CCard>
           )}
-          <CButton
-            onClick={addResource}
-          >
-            Add Resource
-          </CButton>
+          <div className="pb-3">
+            <CButton
+              onClick={addResource}
+              color="secondary"
+            >
+              Add Resource
+            </CButton>
+          </div>
           <div>
-            <CButton type='submit'>
+            <CButton className="mr-2" type='submit' color="primary">
               Save
             </CButton>
+            {loading && (
+              <CSpinner color='primary' />
+            )} 
           </div>
         </CForm>
       </CCard>

@@ -60,7 +60,6 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
     const name = event.target.name;
     const value = event.target.value;
     setBody((values: Object) => ({ ...values, [name]: value }));
-    console.log(body)
   }
 
   const onChangeYesNo = (event: any) => {
@@ -101,7 +100,7 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
                     name={item.name}
                     id={item.name}
                     onChange={onChange}
-                    defaultValue=""
+                    defaultValue={(insertOrUpdate.type === "update") ? body[item.name] : ""}
                   >
                     <option key={`option-none`} value="">None</option>
                     {item.options}
@@ -159,11 +158,24 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
                 <CLabel htmlFor={item.name + "Input"}>{item.name}</CLabel>
                 <div style={{ marginLeft: "1rem" }}>
                   <CLabel htmlFor={"Yes"}>Yes</CLabel>
-                  <CInputRadio id="Yes" value="true" name={item.name} onChange={onChangeYesNo} required={(item.required !== undefined) ? item.required : false} style={{ marginLeft: "1rem" }} />
+                  <CInputRadio
+                    id="Yes"
+                    value="true"
+                    name={item.name}
+                    defaultChecked={body[item.name]}
+                    onChange={onChangeYesNo}
+                    required={(item.required !== undefined) ? item.required : false}
+                    style={{ marginLeft: "1rem" }} />
                 </div>
                 <div style={{ marginLeft: "1rem" }}>
                   <CLabel htmlFor={"No"}>No</CLabel>
-                  <CInputRadio id="No" value="false" name={item.name} onChange={onChangeYesNo} style={{ marginLeft: "1rem" }} />
+                  <CInputRadio
+                    id="No"
+                    value="false"
+                    name={item.name}
+                    defaultChecked={body[item.name]}
+                    onChange={onChangeYesNo}
+                    style={{ marginLeft: "1rem" }} />
                 </div>
               </div>
             );
