@@ -68,18 +68,6 @@ export default function HomePage(resource: Resource) {
                             )}
                         </CCard>)
                 })}
-                <CButton
-                    color="primary"
-                    onClick={() => history.push('/modify-pages')}
-                >
-                    Modify Pages
-                </CButton>
-                <CButton
-                    color="primary"
-                    onClick={() => history.push('/modify-resources')}
-                >
-                    Modify Resources
-                </CButton>
             </div>
         </CContainer>
     );
