@@ -173,7 +173,7 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
                     id="No"
                     value="false"
                     name={item.name}
-                    defaultChecked={body[item.name]}
+                    defaultChecked={!body[item.name]}
                     onChange={onChangeYesNo}
                     style={{ marginLeft: "1rem" }} />
                 </div>

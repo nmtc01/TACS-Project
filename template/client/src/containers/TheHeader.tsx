@@ -10,8 +10,8 @@ const TheHeader = () => {
     <CHeader style={{position: "fixed"}}>
       <CNavbar color="primary" fixed='top'>
         <CNavbarBrand>
-          <CButton onClick={() => window.location.replace("/")} style={{color: "white"}}>
-            TACSonomias
+          <CButton onClick={() => window.location.replace("/")} style={{color: "white", fontWeight: 'bold', fontSize: 18}}>
+            Low-code for CRUDs
           </CButton>
         </CNavbarBrand>
       </CNavbar>
