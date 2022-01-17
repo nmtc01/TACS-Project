@@ -50,9 +50,14 @@ export default function GetOnePage(resource: Resource) {
         let list = [];
         for (let key in element) {
             if (key === "__v") continue;
+            
+            let elem;
+            if (element[key] === true) elem = "true";
+            else if (element[key] === false) elem = "false";
+            else elem = element[key];
             list.push(
                 <CListGroupItem key={"attribute-" + key}>
-                    {key}: {elementTypes[key] && elementTypes[key]["references"] ? <CLink to={`/${elementTypes[key]["type"]}/${element[key]}`}>{element[key]}</CLink> : element[key]}
+                    {key}: {elementTypes[key] && elementTypes[key]["references"] ? <CLink to={`/${elementTypes[key]["type"]}/${elem}`}>{elem}</CLink> : elem}
                 </CListGroupItem>
             );
         }
