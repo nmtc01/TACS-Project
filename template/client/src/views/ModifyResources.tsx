@@ -1,90 +1,31 @@
-import { CButton, CCard, CForm, CListGroup, CListGroupItem, CCol, CRow, CLabel, CInput, CInputRadio } from '@coreui/react';
-import { FormEvent, ReactElement, useEffect, useState } from 'react';
+import { CButton, CCard, CForm, CListGroup, CListGroupItem, CCol, CRow, CLabel, CInput, CInputRadio, CSpinner } from '@coreui/react';
+import { FormEvent, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import API from '../api/API';
 import { FullResource } from '../types';
 
 export default function ModifyResources() {
   const [resources, modifyResources] = useState<{ 'resources': FullResource[] }>();
+  const [loading, setLoading] = useState(false);
 
   const history = useHistory();
 
   useEffect(() => {
-    /*const dummyModifiedResources: FullResource[] = [
-      {
-        "name": "client",
-        "attributes": [
-          {
-            "name": "id",
-            "type": "number"
-          },
-          {
-            "name": "name",
-            "type": "text",
-            "required": true
-          },
-          {
-            "name": "address",
-            "type": "text"
-          },
-          {
-            "name": "car",
-            "references": "car"
-          }
-        ]
-      },
-      {
-        "name": "car",
-        "attributes": [
-          {
-            "name": "id",
-            "type": "number",
-            "required": false
-          },
-          {
-            "name": "license_plate",
-            "type": "text",
-            "required": true
-          },
-          {
-            "name": "is_new",
-            "type": "bool"
-          },
-          {
-            "name": "is_old",
-            "type": "bool"
-          }
-        ]
-      },
-      {
-        "name": "motorcycle",
-        "attributes": [
-          {
-            "name": "cc",
-            "type": "number"
-          },
-          {
-            "name": "is_old",
-            "type": "bool"
-          }
-        ]
-      }
-    ];
-
-    modifyResources({ 'resources': dummyModifiedResources });*/
     const getConfig = async (config: any) => {
       console.log(config.resources)
       if (!config.resources) {
         console.warn("Missing attributes!");
         return;
       }
-    
-      modifyResources({'resources': config.resources});
+
+      modifyResources({ 'resources': config.resources });
     }
-    API.getMethod(getConfig, 'config', ()=>{});
+    API.getMethod(getConfig, 'config', () => { });
   }, [history]);
 
-  const onSubmit = () => {
+  const onSubmit = (event: any) => {
+    event.preventDefault();
+    setLoading(true);
     const ping = () => {
       API.getMethod(() => {
         history.push('/');
@@ -97,7 +38,7 @@ export default function ModifyResources() {
         });
     }
 
-    /*API.postMethod(
+    API.postMethod(
       (res: any) => {
         console.log(res);
         setTimeout(() => {
@@ -106,16 +47,16 @@ export default function ModifyResources() {
       },
       'modify-resources',
       {
-        resources: dummyModifiedResources
+        resources: resources?.resources
       },
-      (err: any) => { console.error(err); });*/
+      (err: any) => { console.error(err); setLoading(false); });
   }
 
   const addResource = () => {
     const currentResources = resources?.resources;
 
     if (!currentResources)
-      return
+      return;
     currentResources.push({ 'name': '', attributes: [] })
     modifyResources({ 'resources': currentResources });
 
@@ -148,7 +89,7 @@ export default function ModifyResources() {
       }
       case 'updateField': {
 
-        if (attributeIndex == undefined)
+        if (attributeIndex === undefined)
           return;
 
         switch (field) {
@@ -165,7 +106,7 @@ export default function ModifyResources() {
             break;
           }
           case 'required': {
-            currentResources[resourceIndex].attributes[attributeIndex]['required'] = value == "true" ? true : false;
+            currentResources[resourceIndex].attributes[attributeIndex]['required'] = value === "true" ? true : false;
             break;
           }
         }
@@ -180,7 +121,10 @@ export default function ModifyResources() {
   return (
     <>
       <CCard style={{ padding: "1rem" }}>
-        <CForm>
+        {loading && (
+          <CSpinner color='primary' />
+        )}
+        <CForm onSubmit={onSubmit}>
           {resources?.resources && resources.resources.map((resource, resindex) => <CCard key={`resource-${resindex}`} style={{ padding: "1rem", backgroundColor: '#eeeeee' }}>
             <CLabel htmlFor={`resourceName-${resindex}`}>Resource Name</CLabel>
             <CInput
@@ -243,9 +187,9 @@ export default function ModifyResources() {
                         <CInputRadio
                           id="Yes"
                           value="true"
-                          name={`required-${attindex}`}
+                          name={`required-${resindex}-${attindex}`}
                           defaultChecked={attribute.required === undefined ? false : attribute.required}
-                          onChange={(event: any) => onChange(event.currentTarget.value, resindex, 'updateField', attindex, 'required')}
+                          onChange={(event: any) => onChange(event.target.value, resindex, 'updateField', attindex, 'required')}
                           style={{ marginLeft: "1rem" }}
                         />
                       </div>
@@ -254,9 +198,9 @@ export default function ModifyResources() {
                         <CInputRadio
                           id="No"
                           value="false"
-                          name={`required-${attindex}`}
-                          defaultChecked={attribute.required === undefined ? true : attribute.required}
-                          onChange={(event: any) => onChange(event.currentTarget.value, resindex, 'updateField', attindex, 'required')}
+                          name={`required-${resindex}-${attindex}`}
+                          defaultChecked={attribute.required === undefined ? true : !attribute.required}
+                          onChange={(event: any) => onChange(event.target.value, resindex, 'updateField', attindex, 'required')}
                           style={{ marginLeft: "1rem" }}
                         />
                       </div>
@@ -275,6 +219,11 @@ export default function ModifyResources() {
           >
             Add Resource
           </CButton>
+          <div>
+            <CButton type='submit'>
+              Save
+            </CButton>
+          </div>
         </CForm>
       </CCard>
     </>
