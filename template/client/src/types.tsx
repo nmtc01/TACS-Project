@@ -1,10 +1,15 @@
+export interface FullResource {
+    name: string;
+    attributes: Array<Attribute>
+}
+
 export interface Resource {
     name: string;
 }
 
 export type Attribute = {
     name: string;
-    type: "text" | "number" | "date" | "bool";
+    type?: "text" | "number" | "date" | "bool";
     required?: boolean;
     references?: string;
 }
