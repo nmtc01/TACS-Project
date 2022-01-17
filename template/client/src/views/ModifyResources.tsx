@@ -72,15 +72,16 @@ export default function ModifyResources() {
     ];
 
     modifyResources({ 'resources': dummyModifiedResources });*/
-    const getResources = async (resources: any) => {
-      if (!resources) {
+    const getConfig = async (config: any) => {
+      console.log(config.resources)
+      if (!config.resources) {
         console.warn("Missing attributes!");
         return;
       }
     
-      modifyResources(resources);
+      modifyResources({'resources': config.resources});
     }
-    API.getMethod(getResources, 'resources', ()=>{});
+    API.getMethod(getConfig, 'config', ()=>{});
   }, [history]);
 
   const onSubmit = () => {
@@ -209,7 +210,7 @@ export default function ModifyResources() {
                       <div><select
                         name={"resource"}
                         id={"resource"}
-                        onChange={(event: any) => onChange(event.currentTarget.value, resindex, 'updateField', attindex, 'name')}
+                        onChange={(event: any) => onChange(event.currentTarget.value, resindex, 'updateField', attindex, 'type')}
                         defaultValue={attribute.type ? attribute.type : "none"}
                         required
                       >
@@ -225,7 +226,7 @@ export default function ModifyResources() {
                       <div><select
                         name={"method"}
                         id={"method"}
-                        onChange={(event: any) => onChange(event.currentTarget.value, resindex, 'updateField', attindex, 'name')}
+                        onChange={(event: any) => onChange(event.currentTarget.value, resindex, 'updateField', attindex, 'references')}
                         defaultValue={attribute.references ? attribute.references : "none"}
                       >
                         <option key={`ref-none-${attindex}`} value={"none"}>--</option>
