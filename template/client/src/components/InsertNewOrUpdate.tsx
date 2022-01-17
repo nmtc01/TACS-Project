@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { CForm, CInput, CLabel, CButton, CInputCheckbox } from '@coreui/react'
+import { CForm, CInput, CLabel, CButton, CInputRadio } from '@coreui/react'
 import API from '../api/API';
 import { Attribute, InsertOrUpdate } from '../types';
 import { useHistory } from 'react-router-dom';
@@ -62,9 +62,9 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
     setBody((values: Object) => ({ ...values, [name]: value }))
   }
 
-  const onCheckboxChange = (event: any) => {
+  const onChangeYesNo = (event: any) => {
     const name = event.target.name;
-    const value = event.target.value === "on" ? true : false;
+    const value = event.target.value === "true" ? true : false;
     setBody((values: Object) => ({ ...values, [name]: value }))
   }
 
@@ -117,7 +117,7 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
                   id={item.name + "Input"}
                   name={item.name}
                   onChange={onChange}
-                  required={(item.required !== undefined) ? item.required : true}
+                  required={(item.required !== undefined) ? item.required : false}
                   placeholder={(insertOrUpdate.type === "update") ? body[item.name] : ""}
                 />
               </div>
@@ -131,7 +131,7 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
                   id={item.name + "Input"}
                   name={item.name}
                   onChange={onChange}
-                  required={(item.required !== undefined) ? item.required : true}
+                  required={(item.required !== undefined) ? item.required : false}
                   placeholder={(insertOrUpdate.type === "update") ? body[item.name] : ""}
                 />
               </div>
@@ -145,7 +145,7 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
                   id={item.name + "Input"}
                   name={item.name}
                   onChange={onChange}
-                  required={(item.required !== undefined) ? item.required : true}
+                  required={(item.required !== undefined) ? item.required : false}
                   placeholder={(insertOrUpdate.type === "update") ? body[item.name] : ""}
                 />
               </div>
@@ -154,7 +154,14 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
             return (
               <div key={"field" + index} className="mb-3">
                 <CLabel htmlFor={item.name + "Input"}>{item.name}</CLabel>
-                <CInputCheckbox name={item.name} onChange={onCheckboxChange} />
+                <div style={{marginLeft: "1rem"}}>
+                  <CLabel htmlFor={"Yes"}>Yes</CLabel>
+                  <CInputRadio id="Yes" value="true" name={item.name} onChange={onChangeYesNo} required={(item.required !== undefined) ? item.required : false} style={{marginLeft: "1rem"}} />
+                </div>
+                <div style={{marginLeft: "1rem"}}>
+                  <CLabel htmlFor={"No"}>No</CLabel>
+                  <CInputRadio id="No" value="false" name={item.name} onChange={onChangeYesNo} style={{marginLeft: "1rem"}} />
+                </div>
               </div>
             );
           default:

@@ -1,11 +1,9 @@
 import { CButton, CCard, CForm, CListGroup, CListGroupItem, CCol, CRow, CLabel, CSpinner } from '@coreui/react';
 import { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import API from '../api/API';
 import { Operation, MethodType } from '../types';
 
 export default function ModifyPages() {
-  const history = useHistory();
   const [pages, modifyPages] = useState<Operation[]>([]);
   const [resources, modifyResources] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);

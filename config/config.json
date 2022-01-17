@@ -37,6 +37,11 @@
         },
         {
           "name": "is_new",
+          "type": "bool",
+          "required": true 
+        },
+        {
+          "name": "is_blue",
           "type": "bool" 
         }
       ]

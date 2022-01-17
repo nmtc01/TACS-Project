@@ -14,19 +14,6 @@ const TheHeader = () => {
             TACSonomias
           </CButton>
         </CNavbarBrand>
-        <CButton
-            color="primary"
-            style={{marginLeft: "auto"}}
-            onClick={() => window.location.replace('/modify-pages')}
-        >
-            Modify Pages
-        </CButton>
-        <CButton
-            color="primary"
-            onClick={() => window.location.replace('/modify-resources')}
-        >
-            Modify Resources
-        </CButton>
       </CNavbar>
     </CHeader>
   );
