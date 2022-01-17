@@ -102,10 +102,9 @@ export default function ModifyPages() {
                           name={"resource"}
                           id={"resource"}
                           onChange={(event) => onChange(event, index)}
-                          required
                         >
-                          {resources.map((resource, index) =>
-                            <option key={`option-${index}`} value={resource} selected={page.resource === resource}>{resource}</option>
+                          {resources.map((resource) =>
+                            <option key={`option-${resource}`} value={resource} selected={page.resource === resource}>{resource}</option>
                           )}
                         </select>
                       </CCol>
@@ -115,12 +114,13 @@ export default function ModifyPages() {
                           name={"method"}
                           id={"method"}
                           onChange={(event) => onChange(event, index)}
+                          defaultValue={page.method}
                         >
-                          <option key={`option-Get-all`} value="Get-all" selected={page.method === "Get-all"}>Get-all</option>
-                          <option key={`option-Get-one`} value="Get-one" selected={page.method === "Get-one"}>Get-one</option>
-                          <option key={`option-Add`} value="Add" selected={page.method === "Add"}>Add</option>
-                          <option key={`option-Update`} value="Update" selected={page.method === "Update"}>Update</option>
-                          <option key={`option-Delete`} value="Delete" selected={page.method === "Delete"}>Delete</option>
+                          <option key={`option-Get-all`} value="Get-all">Get-all</option>
+                          <option key={`option-Get-one`} value="Get-one">Get-one</option>
+                          <option key={`option-Add`} value="Add">Add</option>
+                          <option key={`option-Update`} value="Update">Update</option>
+                          <option key={`option-Delete`} value="Delete">Delete</option>
                         </select>
                       </CCol>
                       <CCol>
