@@ -1,14 +1,12 @@
-import { CButton, CCard, CForm, CListGroup, CListGroupItem, CCol, CRow, CLabel } from '@coreui/react';
-import { ReactElement, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { CButton, CCard, CForm, CListGroup, CListGroupItem, CCol, CRow, CLabel, CSpinner } from '@coreui/react';
+import { useEffect, useState } from 'react';
 import API from '../api/API';
 import { Operation, MethodType } from '../types';
 
 export default function ModifyPages() {
-  const history = useHistory();
   const [pages, modifyPages] = useState<Operation[]>([]);
   const [resources, modifyResources] = useState<string[]>([]);
-  const [inputs, setInputs] = useState<ReactElement<any, any>[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const setConfig = (config: any) => {
@@ -34,63 +32,32 @@ export default function ModifyPages() {
     API.getMethod(setConfig, 'config', (err: any) => console.error(err));
   }, []);
 
-  const onChange = (event: any) => {
+  const onChange = (event: any, index: number) => {
     const name = event.target.name;
     const value = event.target.value;
-    /*modifyPages((old: Operation[]) => {
+    modifyPages((old: Operation[]) => {
       if (name === "resource") {
-        const method: MethodType = old[old.length - 1].method;
-        return [...old.slice(0, -1), { resource: value, method: method }]
+        const method: MethodType = old[index].method;
+        return [...old.slice(0, index), { resource: value, method: method }, ...old.slice(index + 1)]
       }
       else {
-        const resource: string = old[old.length - 1].resource;
-        return [...old.slice(0, -1), { resource: resource, method: value }]
+        const resource: string = old[index].resource;
+        return [...old.slice(0, index), { resource: resource, method: value }, ...old.slice(index + 1)]
       }
-    });*/
+    });
   }
 
-  const addInput = () => {
-    setInputs((oldInputs) => [...oldInputs,
-      <CListGroupItem key={`page-inputs-${oldInputs.length}`}>
-        <CRow>
-          <CCol>
-            <CLabel htmlFor={"resource"}>Resource</CLabel>
-            <select
-              name={"resource"}
-              id={"resource"}
-              onChange={onChange}
-              defaultValue=""
-              required
-            >
-              <option key={`option-none`} value="">None</option>
-              {resources.map((resource, index) =>
-                <option key={`option-${index}`} value={resource}>{resource}</option>
-              )}
-            </select>
-          </CCol>
-          <CCol>
-            <CLabel htmlFor={"method"}>Method</CLabel>
-            <select
-              name={"method"}
-              id={"method"}
-              onChange={onChange}
-              defaultValue="Get-all"
-            >
-              <option key={`option-Get-all`} value="Get-all">Get-all</option>
-              <option key={`option-Get-one`} value="Get-one">Get-one</option>
-              <option key={`option-Add`} value="Add">Add</option>
-              <option key={`option-Update`} value="Update">Update</option>
-              <option key={`option-Delete`} value="Delete">Delete</option>
-            </select>
-          </CCol>
-        </CRow>
-      </CListGroupItem>
-    ]);
+  const addPage = () => {
+    modifyPages((old: Operation[]) => [...old, {resource: resources.length > 0 ? resources[0] : "", method: "Get-all"}]);
+  }
+
+  const deletePage = (index: number) => {
+    modifyPages((old: Operation[]) => [...old.slice(0, index), ...old.slice(index + 1)]);
   }
   
   const ping = () => {
     API.getMethod(() => {
-      history.push('/');
+      window.location.reload();
     },
       "ping",
       (_: any) => {
@@ -101,9 +68,10 @@ export default function ModifyPages() {
   }
 
   const handleSubmit = (event: any) => {
+    event.preventDefault();
+    setLoading(true);
     API.postMethod(
-      (res: any) => {
-        console.log(res);
+      () => {
         setTimeout(() => {
           ping()
         }, 1000);
@@ -118,6 +86,9 @@ export default function ModifyPages() {
   return (
     <div>
       <CCard>
+        {loading && (
+          <CSpinner color='primary' />
+        )}
         <CForm onSubmit={handleSubmit}>
           {pages && resources && (
             <>
@@ -130,12 +101,10 @@ export default function ModifyPages() {
                         <select
                           name={"resource"}
                           id={"resource"}
-                          onChange={onChange}
-                          defaultValue={page.resource}
-                          required
+                          onChange={(event) => onChange(event, index)}
                         >
-                          {resources.map((resource, index) =>
-                            <option key={`option-${index}`} value={resource}>{resource}</option>
+                          {resources.map((resource) =>
+                            <option key={`option-${resource}`} value={resource} selected={page.resource === resource}>{resource}</option>
                           )}
                         </select>
                       </CCol>
@@ -144,7 +113,7 @@ export default function ModifyPages() {
                         <select
                           name={"method"}
                           id={"method"}
-                          onChange={onChange}
+                          onChange={(event) => onChange(event, index)}
                           defaultValue={page.method}
                         >
                           <option key={`option-Get-all`} value="Get-all">Get-all</option>
@@ -154,11 +123,16 @@ export default function ModifyPages() {
                           <option key={`option-Delete`} value="Delete">Delete</option>
                         </select>
                       </CCol>
+                      <CCol>
+                        <CButton onClick={() => deletePage(index)}>
+                          Delete
+                        </CButton>
+                      </CCol>
                     </CRow>
                   </CListGroupItem>
                 )}
               </CListGroup>
-              <CButton color="primary" style={{borderRadius: "50%"}} onClick={addInput}>
+              <CButton color="primary" style={{borderRadius: "50%"}} onClick={addPage}>
                 +
               </CButton>
               <CButton type='submit'>

@@ -66,7 +66,8 @@ export default function HomePage(resource: Resource) {
                                     Show
                                 </CButton>
                             )}
-                        </CCard>)
+                        </CCard>
+                    );
                 })}
                 <CButton
                     color="primary"
@@ -76,6 +77,7 @@ export default function HomePage(resource: Resource) {
                 </CButton>
                 <CButton
                     color="primary"
+                    style={{marginLeft: "1rem"}}
                     onClick={() => history.push('/modify-resources')}
                 >
                     Modify Resources

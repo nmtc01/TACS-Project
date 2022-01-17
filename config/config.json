@@ -37,6 +37,11 @@
         },
         {
           "name": "is_new",
+          "type": "bool",
+          "required": true 
+        },
+        {
+          "name": "is_blue",
           "type": "bool" 
         }
       ]
@@ -51,30 +56,6 @@
       {
         "method": "Get-all",
         "resource": "car"
-      },
-      {
-        "method": "Get-one",
-        "resource": "client"
-      },
-      {
-        "method": "Get-one",
-        "resource": "car"
-      },
-      {
-        "method": "Delete",
-        "resource": "client"
-      },
-      {
-        "method": "Add",
-        "resource": "client"
-      },
-      {
-        "method": "Add",
-        "resource": "car"
-      },
-      {
-        "method": "Update",
-        "resource": "client"
       }
     ]
   }
