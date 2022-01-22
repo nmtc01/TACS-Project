@@ -1,6 +1,7 @@
 export interface FullResource {
     name: string;
-    attributes: Array<Attribute>
+    attributes: Array<Attribute>;
+    editable?: boolean;
 }
 
 export interface Resource {
@@ -14,6 +15,7 @@ export type Attribute = {
     type?: AttributeType,
     required?: boolean;
     references?: string;
+    editable?: boolean;
 }
 
 export interface InsertOrUpdate {

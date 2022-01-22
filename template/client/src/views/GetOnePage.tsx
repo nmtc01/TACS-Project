@@ -47,7 +47,6 @@ export default function GetOnePage(resource: Resource) {
     }, [resource, params.id]);
 
     const iterateElement = () => {
-        console.log(elementTypes)
         let list = [];
         for (let key in element) {
             if (key === "__v") continue;

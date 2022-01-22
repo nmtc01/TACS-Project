@@ -37,6 +37,16 @@ export default function ModifyResources() {
         });
     }
 
+    resources?.resources.map((item: FullResource) => {
+      item.attributes.map((att) => {
+        if (att.editable)
+          delete att.editable;
+        return att;
+      });
+      if (item.editable)
+          delete item.editable;
+      return item;
+    });
     API.postMethod(
       (res: string) => {
         console.log(res);
@@ -56,7 +66,7 @@ export default function ModifyResources() {
 
     if (!currentResources)
       return;
-    currentResources.push({ 'name': '', attributes: [] })
+    currentResources.push({ 'name': '', attributes: [], editable: true })
     modifyResources({ 'resources': currentResources });
   }
 
@@ -66,7 +76,8 @@ export default function ModifyResources() {
     if (!currentResources)
       return
     currentResources[resourceIndex].attributes.push({
-      "name": ""
+      "name": "",
+      editable: true
     })
     modifyResources({ 'resources': currentResources });
   }
@@ -124,6 +135,7 @@ export default function ModifyResources() {
               name={`resourceName-${resindex}`}
               defaultValue={resource.name}
               onChange={(event: FormEvent<HTMLInputElement>) => onChange(event.currentTarget.value, resindex, 'updateName')}
+              disabled={!resource.editable}
             />
             {
               resource.attributes && resource.attributes.map((attribute, attindex) => <CListGroup key={`attributes-${attindex}`} style={{ padding: "1rem" }}>
@@ -138,6 +150,7 @@ export default function ModifyResources() {
                         defaultValue={attribute.name}
                         onChange={(event: FormEvent<HTMLInputElement>) => onChange(event.currentTarget.value, resindex, 'updateField', attindex, 'name')}
                         required
+                        disabled={!attribute.editable}
                       />
                     </CCol>
                     <CCol>
@@ -148,6 +161,7 @@ export default function ModifyResources() {
                         onChange={(event: React.ChangeEvent<HTMLSelectElement>) => onChange(event.currentTarget.value, resindex, 'updateField', attindex, 'type')}
                         defaultValue={attribute.type ? attribute.type : "none"}
                         required
+                        disabled={!attribute.editable}
                       >
                         <option key={`type-none-${resindex}-${attindex}`} value={"none"}>--</option>
                         <option key={`type-text-${resindex}-${attindex}`} value={"text"}>text</option>
@@ -163,6 +177,7 @@ export default function ModifyResources() {
                         id={"method"}
                         onChange={(event: React.ChangeEvent<HTMLSelectElement>) => onChange(event.currentTarget.value, resindex, 'updateField', attindex, 'references')}
                         defaultValue={attribute.references ? attribute.references : "none"}
+                        disabled={!attribute.editable}
                       >
                         <option key={`ref-none-${attindex}`} value={"none"}>--</option>
 
@@ -182,6 +197,7 @@ export default function ModifyResources() {
                           defaultChecked={attribute.required === undefined ? false : attribute.required}
                           onChange={(event: React.ChangeEvent<HTMLSelectElement>) => onChange(event.target.value, resindex, 'updateField', attindex, 'required')}
                           style={{ marginLeft: "1rem" }}
+                          disabled={!attribute.editable}
                         />
                       </div>
                       <div style={{ marginLeft: "1rem" }}>
@@ -193,6 +209,7 @@ export default function ModifyResources() {
                           defaultChecked={attribute.required === undefined ? true : !attribute.required}
                           onChange={(event: React.ChangeEvent<HTMLSelectElement>) => onChange(event.target.value, resindex, 'updateField', attindex, 'required')}
                           style={{ marginLeft: "1rem" }}
+                          disabled={!attribute.editable}
                         />
                       </div>
                     </CCol>
