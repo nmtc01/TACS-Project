@@ -7,9 +7,11 @@ export interface Resource {
     name: string;
 }
 
+type AttributeType = "text" | "number" | "date" | "bool";
+
 export type Attribute = {
     name: string;
-    type?: "text" | "number" | "date" | "bool";
+    type?: AttributeType,
     required?: boolean;
     references?: string;
 }
@@ -32,4 +34,8 @@ export type RouteType = {
     exact: boolean,
     name: string,
     component: React.LazyExoticComponent<(resource: Resource) => JSX.Element>,
+}
+
+export type ResourceParams = {
+    id: string
 }

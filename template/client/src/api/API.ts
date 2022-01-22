@@ -8,7 +8,7 @@ axios.interceptors.response.use(function (response) {
     } else return Promise.reject(error);
 });
 
-const SERVER_URL = 'http://localhost:3001'; // TODO
+const SERVER_URL = 'http://localhost:3001';
 
 export default class API {
     static url: String;

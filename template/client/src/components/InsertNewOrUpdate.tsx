@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { CForm, CInput, CLabel, CButton, CInputRadio } from '@coreui/react'
 import API from '../api/API';
 import { Attribute, InsertOrUpdate } from '../types';
@@ -56,19 +56,19 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
     }
   }, [insertOrUpdate.resource.name, insertOrUpdate.type, insertOrUpdate._id]);
 
-  const onChange = (event: any) => {
+  const onChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const name = event.target.name;
     const value = event.target.value;
     setBody((values: Object) => ({ ...values, [name]: value }));
   }
 
-  const onChangeYesNo = (event: any) => {
+  const onChangeYesNo = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const name = event.target.name;
     const value = event.target.value === "true" ? true : false;
     setBody((values: Object) => ({ ...values, [name]: value }))
   }
 
-  const onSubmit = (event: any) => {
+  const onSubmit = (event: React.ChangeEvent<HTMLSelectElement>) => {
     event.preventDefault();
     if (insertOrUpdate.type === "insert") {
       API.postMethod(

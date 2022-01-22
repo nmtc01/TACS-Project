@@ -7,10 +7,10 @@ import {
 
 const TheHeader = () => {
   return (
-    <CHeader style={{position: "fixed"}}>
+    <CHeader style={{ position: "fixed" }}>
       <CNavbar color="primary" fixed='top'>
         <CNavbarBrand>
-          <CButton onClick={() => window.location.replace("/")} style={{color: "white", fontWeight: 'bold', fontSize: 18}}>
+          <CButton onClick={() => window.location.replace("/")} style={{ color: "white", fontWeight: 'bold', fontSize: 18 }}>
             Low-code for CRUDs
           </CButton>
         </CNavbarBrand>

@@ -1,5 +1,5 @@
 import { CButton, CCard, CForm, CListGroup, CListGroupItem, CCol, CRow, CLabel, CInput, CInputRadio, CSpinner } from '@coreui/react';
-import { FormEvent, useEffect, useState } from 'react';
+import React, { FormEvent, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import API from '../api/API';
 import { FullResource } from '../types';
@@ -22,7 +22,7 @@ export default function ModifyResources() {
     API.getMethod(getConfig, 'config', () => { });
   }, [history]);
 
-  const onSubmit = (event: any) => {
+  const onSubmit = (event: React.SyntheticEvent) => {
     event.preventDefault();
     setLoading(true);
     const ping = () => {
@@ -30,7 +30,7 @@ export default function ModifyResources() {
         history.push('/');
       },
         "ping",
-        (_: any) => {
+        () => {
           setTimeout(() => {
             ping();
           }, 500);
@@ -38,7 +38,7 @@ export default function ModifyResources() {
     }
 
     API.postMethod(
-      (res: any) => {
+      (res: string) => {
         console.log(res);
         setTimeout(() => {
           ping()
@@ -48,7 +48,7 @@ export default function ModifyResources() {
       {
         resources: resources?.resources
       },
-      (err: any) => { console.error(err); setLoading(false); });
+      (err: string) => { console.error(err); setLoading(false); });
   }
 
   const addResource = () => {
@@ -71,8 +71,7 @@ export default function ModifyResources() {
     modifyResources({ 'resources': currentResources });
   }
 
-
-  const onChange = (value: any, resourceIndex: number, action: 'updateName' | 'updateField', attributeIndex?: number, field?: string) => {
+  const onChange = (value: string, resourceIndex: number, action: 'updateName' | 'updateField', attributeIndex?: number, field?: string) => {
     const currentResources = resources?.resources;
 
     if (!currentResources)
@@ -94,7 +93,8 @@ export default function ModifyResources() {
             break;
           }
           case 'type': {
-            currentResources[resourceIndex].attributes[attributeIndex]['type'] = value;
+            if (value === 'number' || value === 'text' || value === 'bool' || value === 'date')
+              currentResources[resourceIndex].attributes[attributeIndex]['type'] = value;
             break;
           }
           case 'references': {
@@ -145,7 +145,7 @@ export default function ModifyResources() {
                       <div><select
                         name={"resource"}
                         id={"resource"}
-                        onChange={(event: any) => onChange(event.currentTarget.value, resindex, 'updateField', attindex, 'type')}
+                        onChange={(event: React.ChangeEvent<HTMLSelectElement>) => onChange(event.currentTarget.value, resindex, 'updateField', attindex, 'type')}
                         defaultValue={attribute.type ? attribute.type : "none"}
                         required
                       >
@@ -161,7 +161,7 @@ export default function ModifyResources() {
                       <div><select
                         name={"method"}
                         id={"method"}
-                        onChange={(event: any) => onChange(event.currentTarget.value, resindex, 'updateField', attindex, 'references')}
+                        onChange={(event: React.ChangeEvent<HTMLSelectElement>) => onChange(event.currentTarget.value, resindex, 'updateField', attindex, 'references')}
                         defaultValue={attribute.references ? attribute.references : "none"}
                       >
                         <option key={`ref-none-${attindex}`} value={"none"}>--</option>
@@ -180,7 +180,7 @@ export default function ModifyResources() {
                           value="true"
                           name={`required-${resindex}-${attindex}`}
                           defaultChecked={attribute.required === undefined ? false : attribute.required}
-                          onChange={(event: any) => onChange(event.target.value, resindex, 'updateField', attindex, 'required')}
+                          onChange={(event: React.ChangeEvent<HTMLSelectElement>) => onChange(event.target.value, resindex, 'updateField', attindex, 'required')}
                           style={{ marginLeft: "1rem" }}
                         />
                       </div>
@@ -191,7 +191,7 @@ export default function ModifyResources() {
                           value="false"
                           name={`required-${resindex}-${attindex}`}
                           defaultChecked={attribute.required === undefined ? true : !attribute.required}
-                          onChange={(event: any) => onChange(event.target.value, resindex, 'updateField', attindex, 'required')}
+                          onChange={(event: React.ChangeEvent<HTMLSelectElement>) => onChange(event.target.value, resindex, 'updateField', attindex, 'required')}
                           style={{ marginLeft: "1rem" }}
                         />
                       </div>
@@ -219,7 +219,7 @@ export default function ModifyResources() {
             </CButton>
             {loading && (
               <CSpinner color='primary' />
-            )} 
+            )}
           </div>
         </CForm>
       </CCard>

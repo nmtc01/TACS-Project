@@ -32,7 +32,7 @@ export default function ModifyPages() {
       modifyResources(resString);
     }
 
-    API.getMethod(setConfig, 'config', (err: any) => console.error(err));
+    API.getMethod(setConfig, 'config', (err: string) => console.error(err));
   }, []);
 
   const onChange = (event: any, index: number) => {
@@ -64,14 +64,14 @@ export default function ModifyPages() {
       window.location.reload();
     },
       "ping",
-      (_: any) => {
+      () => {
         setTimeout(() => {
           ping();
         }, 500);
       });
   }
 
-  const handleSubmit = (event: any) => {
+  const handleSubmit = (event: React.SyntheticEvent) => {
     event.preventDefault();
     setLoading(true);
     API.postMethod(
@@ -84,7 +84,7 @@ export default function ModifyPages() {
       {
         pages: pages
       },
-      (err: any) => { console.error(err); });
+      (err: string) => { console.error(err); });
   }
 
   return (
