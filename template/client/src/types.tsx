@@ -8,7 +8,7 @@ export interface Resource {
     name: string;
 }
 
-type AttributeType = "text" | "number" | "date" | "bool";
+export type AttributeType = "text" | "number" | "date" | "bool";
 
 export type Attribute = {
     name: string;
@@ -40,4 +40,11 @@ export type RouteType = {
 
 export type ResourceParams = {
     id: string
+}
+
+export type ConfigFile = {
+    resources: Array<FullResource>
+    website: {
+        pages: Operation[];
+    }
 }

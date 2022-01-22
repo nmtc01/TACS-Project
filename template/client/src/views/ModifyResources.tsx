@@ -2,7 +2,7 @@ import { CButton, CCard, CForm, CListGroup, CListGroupItem, CCol, CRow, CLabel, 
 import React, { FormEvent, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import API from '../api/API';
-import { FullResource } from '../types';
+import { FullResource, ConfigFile, AttributeType } from '../types';
 
 export default function ModifyResources() {
   const [resources, modifyResources] = useState<{ 'resources': FullResource[] }>();
@@ -11,7 +11,7 @@ export default function ModifyResources() {
   const history = useHistory();
 
   useEffect(() => {
-    const getConfig = async (config: any) => {
+    const getConfig = async (config: ConfigFile) => {
       if (!config.resources) {
         console.warn("Missing attributes!");
         return;
@@ -104,8 +104,7 @@ export default function ModifyResources() {
             break;
           }
           case 'type': {
-            if (value === 'number' || value === 'text' || value === 'bool' || value === 'date')
-              currentResources[resourceIndex].attributes[attributeIndex]['type'] = value;
+            currentResources[resourceIndex].attributes[attributeIndex]['type'] = value as AttributeType;
             break;
           }
           case 'references': {

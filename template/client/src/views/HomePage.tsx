@@ -28,12 +28,12 @@ export default function HomePage(resource: Resource) {
     }
 
     useEffect(() => {
-        const getResources = async (att: any) => {
+        const getResources = async (att: string[]) => {
             if (!att) {
                 console.warn("Missing attributes!");
                 return;
             }
-            let res: any = [];
+            let res: {name: string, show: boolean}[] = [];
             for (let i = 0; i < att.length; i++) {
                 await API.getAwaitMethod((data: boolean) => {
                     res.push({name: att[i], show: data});

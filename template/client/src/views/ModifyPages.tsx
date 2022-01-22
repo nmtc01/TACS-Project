@@ -2,7 +2,7 @@ import { CButton, CCard, CForm, CListGroup, CListGroupItem, CCol, CRow, CLabel, 
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import API from '../api/API';
-import { Operation, MethodType } from '../types';
+import { Operation, MethodType, ConfigFile } from '../types';
 
 export default function ModifyPages() {
   const [pages, modifyPages] = useState<Operation[]>([]);
@@ -12,7 +12,7 @@ export default function ModifyPages() {
   const history = useHistory();
 
   useEffect(() => {
-    const setConfig = (config: any) => {
+    const setConfig = (config: ConfigFile) => {
       const initPages: Operation[] = config.website.pages;
       if (!initPages) {
         console.warn("Missing pages key on website!");

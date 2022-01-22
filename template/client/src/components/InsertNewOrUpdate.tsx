@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { CForm, CInput, CLabel, CButton, CInputRadio } from '@coreui/react'
 import API from '../api/API';
 import { Attribute, InsertOrUpdate } from '../types';
@@ -8,29 +8,28 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
   const history = useHistory();
   const [errors, setErrors] = useState(<></>);
   const [body, setBody] = useState(Object);
-  const [attributes, setAttibutes] = useState<(Attribute & { options: any[] })[]>([]);
+  const [attributes, setAttibutes] = useState<(Attribute & { options: ReactElement[] })[]>([]);
 
   const handleErrors = (err: any) => {
     setErrors(
       <div className="alert alert-danger">
         <ul className="my-0">
-          {err.response.data.errors.map((err: any) => (
-            <li key={err.message}>{err.message}</li>
-          ))}
+          <li key={err.message}>{err.message}</li>
+          <li>Possibly one required field is missing</li>
         </ul>
       </div>
     );
   }
 
   useEffect(() => {
-    const handleOptions = async (data: any[], att: any) => {
+    const handleOptions = async (data: any[], att: Attribute & { options: ReactElement[] }) => {
       att.options = [];
       data.forEach((option, index) => {
         att.options.push(<option key={`option-${index}`} value={option._id}>{option._id}</option>);
       });
     }
 
-    const getAttributes = async (att: any) => {
+    const getAttributes = async (att: (Attribute & { options: ReactElement[] })[]) => {
       if (!att) {
         console.warn("Missing attributes!");
         return;
@@ -40,7 +39,7 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
         if (att[i].references && !att[i].type)
           await API.getAwaitMethod(async (data: boolean) => {
             if (data)
-              await API.getAwaitMethod((options: any) => handleOptions(options, att[i]), att[i].references, handleErrors);
+              await API.getAwaitMethod((options: ReactElement[]) => handleOptions(options, att[i]), att[i].references as string, handleErrors);
           }, 'hasGetall?resource=' + att[i].references, handleErrors);
       }
       setAttibutes(att);
@@ -89,8 +88,8 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
   return (
     <CForm onSubmit={onSubmit}>
       {errors}
-      {attributes.length > 0 && attributes.map((item: Attribute & { options: any[] }, index) => {
-        if (!item.type && item.references && item.options && item.options.length > 0)
+      {attributes.length > 0 && attributes.map((item: Attribute & { options: ReactElement[] }, index) => {
+        if (!item.type && item.references && item.options)
           return (
             <div key={"field" + index} className="mb-3">
               <label htmlFor={item.name}>Choose a {item.name}:</label>

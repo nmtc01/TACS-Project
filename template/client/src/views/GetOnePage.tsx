@@ -1,7 +1,7 @@
 import { CButton, CCard, CCardHeader, CLink, CListGroup, CListGroupItem } from '@coreui/react';
 import { useEffect, useState } from 'react';
 import API from '../api/API';
-import { Resource } from '../types';
+import { Attribute, Resource } from '../types';
 import { useParams } from "react-router";
 import { useHistory } from 'react-router-dom';
 
@@ -27,7 +27,7 @@ export default function GetOnePage(resource: Resource) {
     }
 
     useEffect(() => {
-        const getAttributes = async (att: any) => {
+        const getAttributes = async (att: Attribute[]) => {
             const types: any = {};
             if (!att) {
               console.warn("Missing attributes!");

@@ -8,7 +8,7 @@ import {
 import { CContainer, CFade } from '@coreui/react'
 
 import API from '../api/API';
-import { Operation, RouteType } from '../types';
+import { Operation, RouteType, ConfigFile } from '../types';
 
 const loading = (
   <div className="pt-3 text-center">
@@ -90,7 +90,7 @@ const TheContent = () => {
   ]);
 
   useEffect(() => {
-    const appendRoutes = (config: any) => {
+    const appendRoutes = (config: ConfigFile) => {
       const pages: Operation[] = config.website.pages;
       if (!pages) {
         console.warn("Missing pages key on website!");
