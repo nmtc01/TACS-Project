@@ -1,30 +1,46 @@
-import { useEffect, useState } from 'react'
-import { CForm, CInput, CLabel, CButton, CInputCheckbox } from '@coreui/react'
+import React, { ReactElement, useEffect, useState } from 'react'
+import { CForm, CInput, CLabel, CButton, CInputRadio } from '@coreui/react'
 import API from '../api/API';
 import { Attribute, InsertOrUpdate } from '../types';
 import { useHistory } from 'react-router-dom';
 
 export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
   const history = useHistory();
+  const [errors, setErrors] = useState(<></>);
   const [body, setBody] = useState(Object);
-  const [attributes, setAttibutes] = useState<(Attribute & { options: any[] })[]>([]);
+  const [attributes, setAttibutes] = useState<(Attribute & { options: ReactElement[] })[]>([]);
+
+  const handleErrors = (err: any) => {
+    setErrors(
+      <div className="alert alert-danger">
+        <ul className="my-0">
+          <li key={err.message}>{err.message}</li>
+          <li>Possibly one required field is missing</li>
+        </ul>
+      </div>
+    );
+  }
 
   useEffect(() => {
-    const handleOptions = async (data: any[], att: any) => {
+    const handleOptions = async (data: any[], att: Attribute & { options: ReactElement[] }) => {
       att.options = [];
       data.forEach((option, index) => {
         att.options.push(<option key={`option-${index}`} value={option._id}>{option._id}</option>);
-      })
+      });
     }
 
-    const getAttributes = (att: any) => {
+    const getAttributes = async (att: (Attribute & { options: ReactElement[] })[]) => {
       if (!att) {
         console.warn("Missing attributes!");
         return;
       }
+
       for (let i = 0; i < att.length; i++) {
         if (att[i].references && !att[i].type)
-          API.getAwaitMethod((data: any) => handleOptions(data, att[i]), att[i].references, () => {});
+          await API.getAwaitMethod(async (data: boolean) => {
+            if (data)
+              await API.getAwaitMethod((options: ReactElement[]) => handleOptions(options, att[i]), att[i].references as string, handleErrors);
+          }, 'hasGetall?resource=' + att[i].references, handleErrors);
       }
       setAttibutes(att);
     }
@@ -33,55 +49,63 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
       setBody(val);
     }
 
-    API.getMethod(getAttributes, 'attributes?resource=' + insertOrUpdate.resource.name, () => { });
+    API.getMethod(getAttributes, 'attributes?resource=' + insertOrUpdate.resource.name, handleErrors);
     if (insertOrUpdate.type === "update") {
-      API.getMethod(getValues, insertOrUpdate.resource.name + '/' + insertOrUpdate._id, () => { })
+      API.getMethod(getValues, insertOrUpdate.resource.name + '/' + insertOrUpdate._id, handleErrors)
     }
   }, [insertOrUpdate.resource.name, insertOrUpdate.type, insertOrUpdate._id]);
 
-  const onChange = (event: any) => {
+  const onChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const name = event.target.name;
     const value = event.target.value;
-    setBody((values: Object) => ({ ...values, [name]: value }))
+    setBody((values: Object) => ({ ...values, [name]: value }));
   }
 
-  const onCheckboxChange = (event: any) => {
+  const onChangeYesNo = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const name = event.target.name;
-    const value = event.target.value === "on" ? true : false;
+    const value = event.target.value === "true" ? true : false;
     setBody((values: Object) => ({ ...values, [name]: value }))
   }
 
-  const onSubmit = (event: any) => {
+  const onSubmit = (event: React.ChangeEvent<HTMLSelectElement>) => {
     event.preventDefault();
     if (insertOrUpdate.type === "insert") {
       API.postMethod(
         (newId: string) => { history.push(`/${insertOrUpdate.resource.name}/${newId}`) },
         insertOrUpdate.resource.name,
         body,
-        () => { })
+        handleErrors)
     } else if (insertOrUpdate.type === "update") {
       setBody({ ...body, _id: insertOrUpdate._id })
       API.putMethod(
-        (success: boolean) => { if(success) history.push(`/${insertOrUpdate.resource.name}/${insertOrUpdate._id}`) },
+        (success: boolean) => { if (success) history.push(`/${insertOrUpdate.resource.name}/${insertOrUpdate._id}`) },
         insertOrUpdate.resource.name,
         body,
-        () => { })
+        handleErrors)
     }
   }
 
   return (
     <CForm onSubmit={onSubmit}>
-      {attributes.length > 0 && attributes.map((item: Attribute & { options: any[] }, index) => {
-        console.log(item);
+      {errors}
+      {attributes.length > 0 && attributes.map((item: Attribute & { options: ReactElement[] }, index) => {
         if (!item.type && item.references && item.options)
           return (
             <div key={"field" + index} className="mb-3">
-                <label htmlFor={item.references}>Choose a {item.references}:</label>
-                {item.references && (
-                  <select name={item.references} id={item.references}>
+              <label htmlFor={item.name}>Choose a {item.name}:</label>
+              {item.references && (
+                <div>
+                  <select
+                    name={item.name}
+                    id={item.name}
+                    onChange={onChange}
+                    defaultValue={(insertOrUpdate.type === "update") ? body[item.name] : ""}
+                  >
+                    <option key={`option-none`} value="">None</option>
                     {item.options}
                   </select>
-                )}
+                </div>
+              )}
             </div>
           );
         else switch (item.type) {
@@ -94,8 +118,8 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
                   id={item.name + "Input"}
                   name={item.name}
                   onChange={onChange}
-                  required={(item.required !== undefined) ? item.required : true}
-                  placeholder={(insertOrUpdate.type === "update") ? body[item.name] : ""}
+                  required={(item.required !== undefined) ? item.required : false}
+                  defaultValue={(insertOrUpdate.type === "update") ? body[item.name] : ""}
                 />
               </div>
             );
@@ -108,8 +132,8 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
                   id={item.name + "Input"}
                   name={item.name}
                   onChange={onChange}
-                  required={(item.required !== undefined) ? item.required : true}
-                  placeholder={(insertOrUpdate.type === "update") ? body[item.name] : ""}
+                  required={(item.required !== undefined) ? item.required : false}
+                  defaultValue={(insertOrUpdate.type === "update") ? body[item.name] : ""}
                 />
               </div>
             );
@@ -122,8 +146,8 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
                   id={item.name + "Input"}
                   name={item.name}
                   onChange={onChange}
-                  required={(item.required !== undefined) ? item.required : true}
-                  placeholder={(insertOrUpdate.type === "update") ? body[item.name] : ""}
+                  required={(item.required !== undefined) ? item.required : false}
+                  defaultValue={(insertOrUpdate.type === "update") ? body[item.name] : ""}
                 />
               </div>
             );
@@ -131,13 +155,27 @@ export default function InsertNewOrUpdate(insertOrUpdate: InsertOrUpdate) {
             return (
               <div key={"field" + index} className="mb-3">
                 <CLabel htmlFor={item.name + "Input"}>{item.name}</CLabel>
-                <CInputCheckbox name={item.name} onChange={onCheckboxChange} />
-              </div>
-            );
-          case "list":
-            return (
-              <div key={"field" + index} className="mb-3">
-                Dunno
+                <div style={{ marginLeft: "1rem" }}>
+                  <CLabel htmlFor={"Yes"}>Yes</CLabel>
+                  <CInputRadio
+                    id="Yes"
+                    value="true"
+                    name={item.name}
+                    defaultChecked={body[item.name]}
+                    onChange={onChangeYesNo}
+                    required={(item.required !== undefined) ? item.required : false}
+                    style={{ marginLeft: "1rem" }} />
+                </div>
+                <div style={{ marginLeft: "1rem" }}>
+                  <CLabel htmlFor={"No"}>No</CLabel>
+                  <CInputRadio
+                    id="No"
+                    value="false"
+                    name={item.name}
+                    defaultChecked={!body[item.name]}
+                    onChange={onChangeYesNo}
+                    style={{ marginLeft: "1rem" }} />
+                </div>
               </div>
             );
           default:

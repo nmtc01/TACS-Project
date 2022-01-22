@@ -7,12 +7,12 @@ import {
 const TheLayout = () => {
   return (
     <div className="c-app c-default-layout">
-      <TheHeader/>
+      <TheHeader />
       <div className="c-wrapper">
         <div className="c-body">
-          <TheContent/>
+          <TheContent />
         </div>
-        <TheFooter/>
+        <TheFooter />
       </div>
     </div>
   )

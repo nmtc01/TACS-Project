@@ -8,7 +8,7 @@ axios.interceptors.response.use(function (response) {
     } else return Promise.reject(error);
 });
 
-const SERVER_URL = 'http://localhost:3001'; // TODO
+const SERVER_URL = 'http://localhost:3001';
 
 export default class API {
     static url: String;
@@ -32,8 +32,8 @@ export default class API {
     static async getAwaitMethod(action: Function, path: string, errorAction: Function) {
         await axios
             .get(API.buildURL(path))
-            .then((res) => {
-                action(res.data);
+            .then(async (res) => {
+                await action(res.data);
             })
             .catch((err) => {
                 errorAction(err);

@@ -71,7 +71,6 @@ function generateGetRoute(route: Route): string {
         res.send(await ${toUpper(route.resource)}.find${variables.length > 0 ? 'One' : ''}({${variables}}));
     } catch (err) {
         console.log(err);
-        return res.status(500).send('500 - Server Error');
     }
 });`
     );
@@ -91,7 +90,6 @@ function generateDeleteRoute(route: Route): string {
     }
     catch (err) {
         console.log(err);
-        return res.status(500).send('500 - Server Error');
     }
 });`
     );
@@ -124,7 +122,7 @@ function generatePutOrPostRoute(route: Route, method: 'PUT' | 'POST'): string {
     ${toUpper(route.resource)}.${method == 'POST' ? 'create' : 'updateOne'}(${route.resource}_data, function (err, resource) {
         if (err) {
             console.log(err);
-            return res.status(500).send('500 - Server Error');
+            return res.send({ message: '500 - Server Error', errors: [] });
         }
     
         return res.send(${method == 'POST' ? 'resource._id' : true});

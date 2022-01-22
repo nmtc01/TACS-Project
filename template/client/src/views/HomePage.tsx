@@ -13,9 +13,7 @@ import { Resource } from '../types';
 export default function HomePage(resource: Resource) {
     const history = useHistory();
     const [errors, setErrors] = useState(<></>);
-    const [config, setConfig] = useState(Object);
-    const [resources, setResources] = useState([]);
-    const [hasGetAllsBtn, setHasGetAllsBtn] = useState([]);
+    const [resources, setResources] = useState<{name: string, show: boolean}[]>([]);
     
     const handleErrors = (err: any) => {
         setErrors(
@@ -30,35 +28,22 @@ export default function HomePage(resource: Resource) {
     }
 
     useEffect(() => {
-        const getResources = (att: any) => {
+        const getResources = async (att: string[]) => {
             if (!att) {
                 console.warn("Missing attributes!");
                 return;
             }
-            setResources(att);
+            let res: {name: string, show: boolean}[] = [];
+            for (let i = 0; i < att.length; i++) {
+                await API.getAwaitMethod((data: boolean) => {
+                    res.push({name: att[i], show: data});
+                }, 'hasGetall?resource=' + att[i], handleErrors);
+            };
+            setResources(res);
         }
 
         API.getMethod(getResources, 'resources', handleErrors);
-        API.getMethod(setConfig, 'config', handleErrors);
     }, []);
-
-    useEffect(() => {
-        if (!config || !config.website)
-            return;
-        const pages = config.website.pages;
-        if (!pages)
-            return;
-        
-        resources.forEach((item) => {
-            for (let i = 0; i < pages.length; i++) {
-                if (pages[i].resource === item && pages[i].method === "Get-all") {
-                    setHasGetAllsBtn((old) => [...old, true] as never[]);
-                    break;
-                }
-                if (i === pages.length - 1) setHasGetAllsBtn((old) => [...old, false] as never[]);
-            }
-        })
-    }, [resources, config]);
 
     return (
         <CContainer>
@@ -69,20 +54,34 @@ export default function HomePage(resource: Resource) {
                     return (
                         <CCard style={{ width: '70%', position: 'relative' }} key={`Resource ${index}`}>
                             <CCardBody>
-                                <CCardTitle>Resource {item}</CCardTitle>
+                                <CCardTitle>Resource {item.name}</CCardTitle>
                             </CCardBody>
-                            {hasGetAllsBtn[index] && (
+                            {item.show && (
                                 <CButton
                                     style={{ position: 'absolute', top: '0.75em', right: "1em" }}
                                     color="dark"
                                     shape="rounded-circle"
-                                    onClick={() => history.push('/' + item)}
+                                    onClick={() => history.push('/' + item.name)}
                                 >
                                     Show
                                 </CButton>
                             )}
-                        </CCard>)
+                        </CCard>
+                    );
                 })}
+                <CButton
+                    color="primary"
+                    onClick={() => history.push('/modify-pages')}
+                >
+                    Modify Pages
+                </CButton>
+                <CButton
+                    color="primary"
+                    style={{marginLeft: "1rem"}}
+                    onClick={() => history.push('/modify-resources')}
+                >
+                    Modify Resources
+                </CButton>
             </div>
         </CContainer>
     );
